@@ -1,2 +1,0 @@
-# Wally-Street-app
-
