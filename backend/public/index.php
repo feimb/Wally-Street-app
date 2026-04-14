@@ -9,14 +9,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
-
-$app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Hello world!");
-    return $response;
-});
-
-
-
 // silencia el error de las devtools de google
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+(require __DIR__ . '/../routes/web.php')($app);
+
+
 $app->run();
