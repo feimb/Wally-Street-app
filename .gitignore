@@ -1,0 +1,25 @@
+# carpetas Frameworks
+*/vendor/
+*/node_modules/
+# archivos de configuración y entorno
+.env
+.env.*.local
+
+composer.phar
+
+# editores
+.idea/
+.vscode/
+
+.DS_Store
+Thumbs.db
+
+# PHP 
+.phpunit.result.cache
+.phpunit.cache
+.php_cs.cache
+
+# logs y archivos temporales
+logs/
+tmp/
+cache/
