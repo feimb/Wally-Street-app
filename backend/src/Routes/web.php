@@ -1,28 +1,27 @@
+
 <?php
 
 use Slim\App;
-use Slim\Routing\RouteCollercotrProxy;
+use App\Controllers\UserController;
+use App\Controllers\AssetsController;
+use App\Controllers\AuthController;
+return function (App $app) {
 
-return function (app $app) {
 
+    $app->get('/users', [UserController::class, 'index']); // solo admin muestra los usuarios
 
-    $app->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("Hello world!");
-        return $response;
-    });
-    // Autenticacion
-    $app->post('/login', function ($request, $response, $args) {
-        return;
-    });
+$app->post('/login', [AuthController::class, 'retreive']);    // falta token
+
+$app->get('/assets', [AssetsController::class, 'index']);    // 
+
+$app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive']);
 
     $app->post('/logout', function ($request, $response, $args) {
         return;
     });
 
-    // Usuarios
-    $app->get('/users', function ($request, $response, $args) {
-        return;
-    });
+ 
+
     $app->get('/users/{user_id}', function ($request, $response, $args) {
         return;
     });
@@ -31,17 +30,8 @@ return function (app $app) {
     });
 
     //Activos
-    $app->get('/assets', function ($request, $response, $args) {
-        // filtros
-        // ?type={name}
-        // min_price: Precio mínimo (ej: ?min_price=50).
-        // max_price: Precio máximo (ej: ?max_price=500).
-
-        return;
-    });
-    $app->get('/assets/{asset_id}/history/{quantity}', function ($request, $response, $args) {
-        return;
-    });
+   
+    
     $app->put('/assets', function ($request, $response, $args) {
         // <<< solo admin  >>>
         // Dispara la actualización aleatoria de los precios de todos
@@ -49,7 +39,7 @@ return function (app $app) {
 
         return;
     });
-    
+
     // operaciones
     $app->post('/trade/buy', function ($request, $response, $args) {
         return;
@@ -68,4 +58,6 @@ return function (app $app) {
     $app->delete('/portfolio/{asset_id}', function ($request, $response, $args) {
         return;
     });
+
+
 };
