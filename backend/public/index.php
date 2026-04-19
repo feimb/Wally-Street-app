@@ -15,5 +15,6 @@ $app = AppFactory::create();
 (require __DIR__ . '/../src/routes/web.php')($app);
 // silencia el error de las devtools de google
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$app->addBodyParsingMiddleware();
 
 $app->run();
