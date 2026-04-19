@@ -2,6 +2,9 @@
 
 use Slim\App;
 use Slim\Routing\RouteCollercotrProxy;
+use Firebase\JWT\JWT;
+use App\app\Middleware\IsLoggedMiddleware;
+use App\DB\DB;
 
 return function (app $app) {
 
@@ -11,8 +14,54 @@ return function (app $app) {
         return $response;
     });
     // Autenticacion
-    $app->post('/login', function ($request, $response, $args) {
-        return;
+
+
+    $app->post('/login', function ($request, $response) {
+
+        $data = $request->getParsedBody();
+
+
+        $email = $data['email'] ??  '';
+        $password  = $data['password'] ??  '';
+
+
+        $pdo = DB::conexion();
+
+
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+
+
+        $users = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$users || !password_verify($password, $users['password'])) {
+
+            $response->getBody()->write(json_encode([
+                "error" => "Credenciales inválidas"
+            ]));
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(401);
+        }
+
+        $expire = (new \DateTime("now"))
+            ->modify("+1 hour")
+            ->format("Y-m-d H:i:s");
+
+        $token = JWT::encode([
+            "usuario" => $users["id"],
+            "expired_at" => $expire
+        ], IsLoggedMiddleware::$secret, 'HS256');
+
+        $response->getBody()->write(json_encode([
+            "mensaje" => "Usuario logueado",
+            "token" => $token
+        ]));
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
     });
 
     $app->post('/logout', function ($request, $response, $args) {
@@ -49,7 +98,7 @@ return function (app $app) {
 
         return;
     });
-    
+
     // operaciones
     $app->post('/trade/buy', function ($request, $response, $args) {
         return;
