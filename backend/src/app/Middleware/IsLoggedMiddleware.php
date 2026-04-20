@@ -28,7 +28,6 @@ class IsLoggedMiddleware implements Middleware
         try {
             if ($request->hasHeader("Authorization")) {
 
-                // ✔️ Soporta "Bearer TOKEN"
                 $token = str_replace('Bearer ', '', $request->getHeaderLine("Authorization"));
 
                 if (!empty($token)) {
@@ -36,10 +35,10 @@ class IsLoggedMiddleware implements Middleware
                     $key = new Key(self::$secret, "HS256");
                     $dataToken = JWT::decode($token, $key);
 
-                    // ✔️ Comparación correcta de fechas
                     $now = new \DateTime();
                     $expire = new \DateTime($dataToken->expired_at);
 
+                    // token vencido
                     if ($expire < $now) {
                         $response = $this->responseFactory->createResponse();
                         $response->getBody()->write(json_encode([
@@ -50,15 +49,25 @@ class IsLoggedMiddleware implements Middleware
                             ->withHeader("Content-Type", "application/json")
                             ->withStatus(401);
                     }
+                    // renovacion
+                    $nuevoPayload = [
+                        "usuario" => $dataToken->usuario,
+                        "expired_at" => (new \DateTime($dataToken->expired_at))
+                            ->modify('+5 minutes')
+                            ->format("Y-m-d H:i:s")
+                    ];
 
-                    // ✔️ Paso usuario al request
+                    $nuevoToken = JWT::encode($nuevoPayload, self::$secret, 'HS256');
+
                     $request = $request->withAttribute('usuario', $dataToken->usuario);
 
-                    return $handler->handle($request);
+                    $response  = $handler->handle($request);
+
+                    return $response->withHeader('Authorization', 'Bearer ' . $nuevoToken);
                 }
             }
 
-           
+
             $response = $this->responseFactory->createResponse();
             $response->getBody()->write(json_encode([
                 "error" => "Acción requiere login"
@@ -67,7 +76,6 @@ class IsLoggedMiddleware implements Middleware
             return $response
                 ->withHeader("Content-Type", "application/json")
                 ->withStatus(401);
-
         } catch (\Exception $e) {
 
             $response = $this->responseFactory->createResponse();

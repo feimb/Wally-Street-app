@@ -1,69 +1,33 @@
 <?php
 
 use Slim\App;
-use Slim\Routing\RouteCollercotrProxy;
-use Firebase\JWT\JWT;
+
+
 use App\app\Middleware\IsLoggedMiddleware;
-use App\DB\DB;
+
+use App\Controllers\AuthController;
 
 return function (app $app) {
+    // prueba de rutas protegidas con token
+    $app->group('/api', function ($group) {
+        $group->get('/', function ($request, $response, $args) {
 
-
-    $app->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("Hello world!");
-        return $response;
-    });
-    // Autenticacion
-
-
-    $app->post('/login', function ($request, $response) {
-
-        $data = $request->getParsedBody();
-
-
-        $email = $data['email'] ??  '';
-        $password  = $data['password'] ??  '';
-
-
-        $pdo = DB::conexion();
-
-
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->execute(['email' => $email]);
-
-
-        $users = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$users || !password_verify($password, $users['password'])) {
+            $usuario = $request->getAttribute('usuario');
 
             $response->getBody()->write(json_encode([
-                "error" => "Credenciales inválidas"
+                "mensaje" => "Hello world!",
+                "usuario" => $usuario
             ]));
 
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus(401);
-        }
 
-        $expire = (new \DateTime("now"))
-            ->modify("+1 hour")
-            ->format("Y-m-d H:i:s");
+            return $response->withHeader('Content-Type', 'application/json');
+        });
+    })->add(new IsLoggedMiddleware($app->getResponseFactory()));
+    // prueba de rutas protegidas con token
 
-        $token = JWT::encode([
-            "usuario" => $users["id"],
-            "expired_at" => $expire
-        ], IsLoggedMiddleware::$secret, 'HS256');
+    // Autenticacion
 
-        $response->getBody()->write(json_encode([
-            "mensaje" => "Usuario logueado",
-            "token" => $token
-        ]));
-
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
-    });
-
+    $app->post('/login', [AuthController::class, 'login']);
     $app->post('/logout', function ($request, $response, $args) {
         return;
     });
