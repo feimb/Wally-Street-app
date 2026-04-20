@@ -23,12 +23,11 @@ class IsLoggedMiddleware implements Middleware
         $this->responseFactory = $responseFactory;
     }
 
-    public function process(Request $request, RequestHandler $handler): Response
+    public function process(Request $request, RequestHandler $handler): Response 
     {
         try {
             if ($request->hasHeader("Authorization")) {
-
-                // ✔️ Soporta "Bearer TOKEN"
+                
                 $token = str_replace('Bearer ', '', $request->getHeaderLine("Authorization"));
 
                 if (!empty($token)) {
@@ -36,10 +35,10 @@ class IsLoggedMiddleware implements Middleware
                     $key = new Key(self::$secret, "HS256");
                     $dataToken = JWT::decode($token, $key);
 
-                    // ✔️ Comparación correcta de fechas
                     $now = new \DateTime();
                     $expire = new \DateTime($dataToken->expired_at);
 
+                    // token vencido
                     if ($expire < $now) {
                         $response = $this->responseFactory->createResponse();
                         $response->getBody()->write(json_encode([
@@ -50,11 +49,19 @@ class IsLoggedMiddleware implements Middleware
                             ->withHeader("Content-Type", "application/json")
                             ->withStatus(401);
                     }
+                    // renovacion
+                    $nuevoPayload = [
+                        "usuario" => $dataToken -> usuario,
+                        "expired_at" => (new \DateTime('+5 minutes')) -> format("Y-m-d H:i:s")
+                    ];
 
-                    // ✔️ Paso usuario al request
-                    $request = $request->withAttribute('usuario', $dataToken->usuario);
+                    $nuevoToken = JWT::encode($nuevoPayload, self::$secret, 'HS256');
 
-                    return $handler->handle($request);
+                    $request = $request->withAttribute('usuario', $dataToken-> usuario);
+
+                    $response  = $handler->handle($request);
+
+                    return $response->withHeader('Authorization', 'Bearer ' . $nuevoToken);
                 }
             }
 

@@ -46,9 +46,9 @@ return function (app $app) {
         }
 
         $expire = (new \DateTime("now"))
-            ->modify("+1 hour")
+            ->modify("+5 minutes")
             ->format("Y-m-d H:i:s");
-
+        
         $token = JWT::encode([
             "usuario" => $users["id"],
             "expired_at" => $expire
