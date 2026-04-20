@@ -23,11 +23,11 @@ class IsLoggedMiddleware implements Middleware
         $this->responseFactory = $responseFactory;
     }
 
-    public function process(Request $request, RequestHandler $handler): Response 
+    public function process(Request $request, RequestHandler $handler): Response
     {
         try {
             if ($request->hasHeader("Authorization")) {
-                
+
                 $token = str_replace('Bearer ', '', $request->getHeaderLine("Authorization"));
 
                 if (!empty($token)) {
@@ -51,13 +51,15 @@ class IsLoggedMiddleware implements Middleware
                     }
                     // renovacion
                     $nuevoPayload = [
-                        "usuario" => $dataToken -> usuario,
-                        "expired_at" => (new \DateTime('+5 minutes')) -> format("Y-m-d H:i:s")
+                        "usuario" => $dataToken->usuario,
+                        "expired_at" => (new \DateTime($dataToken->expired_at))
+                            ->modify('+5 minutes')
+                            ->format("Y-m-d H:i:s")
                     ];
 
                     $nuevoToken = JWT::encode($nuevoPayload, self::$secret, 'HS256');
 
-                    $request = $request->withAttribute('usuario', $dataToken-> usuario);
+                    $request = $request->withAttribute('usuario', $dataToken->usuario);
 
                     $response  = $handler->handle($request);
 
@@ -65,7 +67,7 @@ class IsLoggedMiddleware implements Middleware
                 }
             }
 
-           
+
             $response = $this->responseFactory->createResponse();
             $response->getBody()->write(json_encode([
                 "error" => "Acción requiere login"
@@ -74,7 +76,6 @@ class IsLoggedMiddleware implements Middleware
             return $response
                 ->withHeader("Content-Type", "application/json")
                 ->withStatus(401);
-
         } catch (\Exception $e) {
 
             $response = $this->responseFactory->createResponse();

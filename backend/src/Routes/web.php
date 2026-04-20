@@ -7,12 +7,23 @@ use App\app\Middleware\IsLoggedMiddleware;
 use App\DB\DB;
 
 return function (app $app) {
+    // prueba de rutas protegidas con token
+    $app->group('/api', function ($group) {
+        $group->get('/', function ($request, $response, $args) {
+
+            $usuario = $request->getAttribute('usuario');
+
+            $response->getBody()->write(json_encode([
+                "mensaje" => "Hello world!",
+                "usuario" => $usuario
+            ]));
 
 
-    $app->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("Hello world!");
-        return $response;
-    });
+            return $response->withHeader('Content-Type', 'application/json');
+        });
+    })->add(new IsLoggedMiddleware($app->getResponseFactory()));
+    // prueba de rutas protegidas con token
+
     // Autenticacion
 
 
@@ -48,7 +59,7 @@ return function (app $app) {
         $expire = (new \DateTime("now"))
             ->modify("+5 minutes")
             ->format("Y-m-d H:i:s");
-        
+
         $token = JWT::encode([
             "usuario" => $users["id"],
             "expired_at" => $expire
