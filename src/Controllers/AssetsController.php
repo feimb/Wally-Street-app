@@ -26,16 +26,16 @@ public function index(Request $request, Response $response): Response // mostrar
     $response->getBody()->write("error no hay assets");
     return $response->withStatus(404);
 }
-public function retreive(Request $request, Response $response, array $args): Response  // mostrar ultimos 5 cambios de precio de un asset
+public function retreive(Request $request, Response $response,  $args): Response  // mostrar ultimos 5 cambios de precio de un asset
 {
      $asset_id=(int)$args['asset_id'];
     $quantity = (int) $args['quantity'];
 
     $data = AssetsModel::ObtenerCambios($asset_id, $quantity);
 
-    if (!$data) {
+    if (!empty($data)) {
         $response->getBody()->write(json_encode([
-            "error" => "No hay cambios para este asset"
+            "No hay cambios para este asset"
         ]));
 
         return $response

@@ -15,8 +15,7 @@ public function index(Request $request, Response $response): Response
 
     if ($dato) {
         $response->getBody()->write(json_encode([
-            "message" => "obtenido",
-            "data" => $dato
+            $dato
         ]));
 
         return $response
@@ -33,6 +32,7 @@ public function index(Request $request, Response $response): Response
         ->withStatus(404)
         ->withHeader('Content-Type', 'application/json');
 }
+
 public function retrieve(Request $request, Response $response): Response // crear usuario
 {
     $dato = json_decode($request->getBody()->getContents(), true) ?? [];
@@ -77,6 +77,30 @@ private function error($response, $mensaje)
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(400);
+}
+public function ObtenerUsuario(Request $request, Response $response, $args): Response
+{
+    $id = $args['id'] ;
+
+
+
+    $dato = UserModel::obtenerUsuario($id);
+
+    if ($dato) {
+        $response->getBody()->write(json_encode($dato));
+
+        return $response
+            ->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    $response->getBody()->write(json_encode([
+        "error" => "Usuario no encontrado"
+    ]));
+
+    return $response
+        ->withStatus(404)
+        ->withHeader('Content-Type', 'application/json');
 }
 
 }
