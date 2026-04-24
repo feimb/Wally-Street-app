@@ -28,9 +28,7 @@ return function (app $app) {
     // Autenticacion
 
     $app->post('/login', [AuthController::class, 'login']);
-    $app->post('/logout', function ($request, $response, $args) {
-        return;
-    });
+    $app->post('/logout', [AuthController::class, 'logout']);
 
     // Usuarios
     $app->get('/users', function ($request, $response, $args) {
