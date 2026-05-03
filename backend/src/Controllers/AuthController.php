@@ -23,7 +23,7 @@ class AuthController
         $pdo = DB::conexion();
 
 
-        $users = UserModel::getByEmail($pdo, $email);
+        $users = UserModel::getTokenByEmail($pdo, $email);
 
         if (!$users || !password_verify($password, $users['password'])) {
 

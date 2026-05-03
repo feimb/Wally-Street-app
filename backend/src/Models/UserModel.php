@@ -94,7 +94,7 @@ class UserModel
 
 
     //login
-    public static function getByEmail($pdo, $email)
+    public static function getTokenByEmail($pdo, $email)
     {
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email]);
