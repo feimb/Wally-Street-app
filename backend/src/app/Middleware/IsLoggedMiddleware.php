@@ -75,27 +75,21 @@ class IsLoggedMiddleware implements Middleware
                             ->withStatus(401);
                     }
                     // renovacion
-                    $nuevoPayload = [
-                        "usuario" => $dataToken->usuario,
-                        "token_expired_at" => (new \DateTime($user["token_expired_at"]))
-                            ->modify('+5 minutes')
-                            ->format("Y-m-d H:i:s")
-                    ];
+                    $nuevaFecha = (new \DateTime($user["token_expired_at"]))
+                        ->modify('+5 minutes')
+                        ->format("Y-m-d H:i:s");
 
-                    $nuevoToken = JWT::encode($nuevoPayload, self::$secret, 'HS256');
                     UserModel::updateToken(
                         $pdo,
                         $user["id"],
-                        $nuevoToken,
-                        $nuevoPayload["token_expired_at"]
+                        $token,
+                        $nuevaFecha
                     );
 
 
                     $request = $request->withAttribute('usuario', $dataToken->usuario);
 
-                    $response  = $handler->handle($request);
-
-                    return $response->withHeader('Authorization', 'Bearer ' . $nuevoToken);
+                    return $handler->handle($request);
                 }
             }
 
