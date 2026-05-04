@@ -141,4 +141,31 @@ class UserModel
             "id" => $id
         ]);
     }
+    // actualizar datos
+    public static function updateUser($id, $name, $password)
+    {
+        $pdo = DB::conexion();
+
+        $fields = [];
+        $params = ["id" => $id];
+
+        if ($name !== null) {
+            $fields[] = "name = :name";
+            $params["name"] = $name;
+        }
+
+        if ($password !== null) {
+            $fields[] = "password = :password";
+            $params["password"] = $password;
+        }
+        // por si esta vacio
+        if (empty($fields)) {
+            return false; 
+        }
+
+        $sql = "UPDATE users SET " . implode(", ", $fields) . " WHERE id = :id";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+    }
 };

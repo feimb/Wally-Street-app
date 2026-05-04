@@ -124,4 +124,45 @@ class UserController
             ->withStatus(404)
             ->withHeader('Content-Type', 'application/json');
     }
+    public static function errorCode($response, $message, $code)
+    {
+        $response->getBody()->write(json_encode([
+            "error" => $message
+        ]));
+
+        return $response
+            ->withHeader("Content-Type", "application/json")
+            ->withStatus($code);
+    }
+    public static function updateUser($request, $response, $args)
+    {
+        $data = $request->getParsedBody();
+
+        $name = $data["name"] ?? null;
+        $password = $data["password"] ?? null;
+
+        $userIdParam = $args["user_id"];
+        $userIdToken = $request->getAttribute("usuario");
+
+        if ($userIdParam != $userIdToken) {
+            return self::errorCode($response, "No autorizado", 403);
+        }
+
+        if (!$name && !$password) {
+            return self::errorCode($response, "Nada para actualizar", 400);
+        }
+
+        if ($password) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+
+        UserModel::updateUser($userIdParam, $name, $password);
+
+        $response->getBody()->write(json_encode([
+            "message" => "Usuario actualizado"
+        ]));
+
+        return $response->withHeader("Content-Type", "application/json");
+    }
 }

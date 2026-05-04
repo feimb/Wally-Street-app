@@ -23,6 +23,7 @@ return function (app $app) {
 
             return $response->withHeader('Content-Type', 'application/json');
         });
+        $group->put('/users/{user_id}', [UserController::class ,'updateUser']);
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
     // prueba de rutas protegidas con token
     $app->get('/hola', function ($request, $response, $args) {
