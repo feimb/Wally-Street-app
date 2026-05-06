@@ -4,6 +4,7 @@ use Slim\App;
 use App\app\Middleware\IsLoggedMiddleware;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
+use App\Controllers\OperationsController;
 
 return function (app $app) {
     // prueba de rutas protegidas con token
