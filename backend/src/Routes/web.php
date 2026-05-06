@@ -1,6 +1,8 @@
+
 <?php
 
 use Slim\App;
+<<<<<<< HEAD
 
 
 use App\app\Middleware\IsLoggedMiddleware;
@@ -79,4 +81,15 @@ return function (app $app) {
     $app->delete('/portfolio/{asset_id}', function ($request, $response, $args) {
         return;
     });
+=======
+use App\app\Middleware\IsLoggedMiddleware;
+use App\Controllers\OperationsController;
+return function (App $app) {
+
+
+$app->post('/trade/sell', [OperationsController::class, 'sell'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
+
+$app->post('/trade/buy', [OperationsController::class, 'buy'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
+>>>>>>> origin/feature/operations
 };
+
