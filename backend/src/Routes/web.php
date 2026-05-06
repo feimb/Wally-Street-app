@@ -21,6 +21,10 @@ return function (app $app) {
             return $response->withHeader('Content-Type', 'application/json');
         });
         $group->put('/users/{user_id}', [UserController::class ,'updateUser']);
+        $group->get('/users/{user_id}', [UserController::class ,'ObtenerUsuario']);
+        $group->get('/users', [UserController::class ,'index']);
+
+
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
     // prueba de rutas protegidas con token
     $app->get('/hola', function ($request, $response, $args) {

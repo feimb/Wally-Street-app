@@ -21,24 +21,7 @@ class UserModel
     }
 
 
-    public static function obtenerUsuario($id) // solo el mismo usuario o un admin
-    {
-        $pdo = DB::conexion();
 
-        $sql = "SELECT 
-    users.name AS Nombre,users.balance as Saldo,
-    COALESCE(SUM(porta.quantity * assets.current_price), 0) AS Total              
-    FROM users
-    LEFT JOIN portfolio porta ON users.id = porta.user_id
-    LEFT JOIN assets ON porta.asset_id = assets.id
-    WHERE users.id = :id
-    GROUP BY users.id, users.name;";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
 
     public static function existe($email)
     {
@@ -160,7 +143,7 @@ class UserModel
         }
         // por si esta vacio
         if (empty($fields)) {
-            return false; 
+            return false;
         }
 
         $sql = "UPDATE users SET " . implode(", ", $fields) . " WHERE id = :id";
@@ -168,36 +151,56 @@ class UserModel
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
     }
-public static function ObtenerSaldo($id) 
-{
-    $pdo = DB::conexion();
-   $sql="
+    public static function ObtenerSaldo($id)
+    {
+        $pdo = DB::conexion();
+        $sql = "
         SELECT  balance 
         FROM users 
         WHERE id = :user_id 
     ";
-    $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
-    $stmt->execute(['user_id' => $id]);
+        $stmt->execute(['user_id' => $id]);
 
-    return  $stmt->fetch(PDO::FETCH_ASSOC);
-}
-public static function ActualizarSaldo($user_id, $saldo)
-{
-    $pdo = DB::conexion();
+        return  $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public static function ActualizarSaldo($user_id, $saldo)
+    {
+        $pdo = DB::conexion();
 
-    $sql = "UPDATE users 
+        $sql = "UPDATE users 
             SET balance = :saldo 
             WHERE id = :user_id";
 
-    $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([
-        'user_id' => $user_id,
-        'saldo' => $saldo
-    ]);
+        $stmt->execute([
+            'user_id' => $user_id,
+            'saldo' => $saldo
+        ]);
 
-    return $stmt->rowCount() > 0;
-}
+        return $stmt->rowCount() > 0;
+    }
 
+    // obtenerUsuario
+    public static function obtenerUsuario($id) // solo el mismo usuario o un admin
+    {
+        $pdo = DB::conexion();
+
+        $sql = "SELECT 
+        users.name AS Nombre,
+        users.balance AS Saldo,
+        COALESCE(SUM(porta.quantity * assets.current_price), 0) AS Total
+        FROM users
+        LEFT JOIN portfolio porta ON users.id = porta.user_id
+        LEFT JOIN assets ON porta.asset_id = assets.id
+        WHERE users.id = :id
+        GROUP BY users.id, users.name, users.balance";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 };

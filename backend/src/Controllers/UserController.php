@@ -26,9 +26,7 @@ class UserController
         $dato = UserModel::obtenerUsuarios();
 
         if ($dato) {
-            $response->getBody()->write(json_encode([
-                $dato
-            ]));
+            $response->getBody()->write(json_encode($dato));
 
             return $response
                 ->withStatus(200)
@@ -91,10 +89,9 @@ class UserController
     }
     public function ObtenerUsuario(Request $request, Response $response, $args): Response
     {
-        $id = $args['id'];
+        $id = $args['user_id'];
         $user_id = $request->getAttribute('usuario');
-
-        if (!UserModel::esAdmin($user_id)) {
+        if ($user_id != $id && !UserModel::esAdmin($user_id)) {
             $response->getBody()->write(json_encode([
                 "error" => "Acceso denegado"
             ]));
