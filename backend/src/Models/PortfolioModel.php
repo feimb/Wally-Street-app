@@ -31,7 +31,43 @@ class PortfolioModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function getAssetByUser($user_id, $asset_id)
+    {
+        $pdo = DB::conexion();
 
+        $sql = "
+        SELECT *
+        FROM portfolio
+        WHERE user_id = :user_id
+        AND asset_id = :asset_id
+    ";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->execute([
+            "user_id" => $user_id,
+            "asset_id" => $asset_id
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public static function deleteAsset($user_id, $asset_id)
+    {
+        $pdo = DB::conexion();
+
+        $sql = "
+        DELETE FROM portfolio
+        WHERE user_id = :user_id
+        AND asset_id = :asset_id
+    ";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->execute([
+            "user_id" => $user_id,
+            "asset_id" => $asset_id
+        ]);
+    }
     //trade
     public static function Registrar($user_id, $asset_id, $quantity)
     {

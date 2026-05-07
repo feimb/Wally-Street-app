@@ -29,6 +29,8 @@ return function (app $app) {
         // portafolio
         $group->get('/portfolio', [PortfolioController::class, 'index']);
 
+        $group->delete('/portfolio/{asset_id}', [PortfolioController::class, 'delete']);
+
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
     // prueba de rutas protegidas con token
     $app->get('/hola', function ($request, $response, $args) {
