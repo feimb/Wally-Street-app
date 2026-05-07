@@ -6,6 +6,8 @@ use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\OperationsController;
 use App\Controllers\PortfolioController;
+use App\Controllers\TransactionController;
+
 return function (app $app) {
     // prueba de rutas protegidas con token
     $app->group('/api', function ($group) {
@@ -30,6 +32,9 @@ return function (app $app) {
         $group->get('/portfolio', [PortfolioController::class, 'index']);
 
         $group->delete('/portfolio/{asset_id}', [PortfolioController::class, 'delete']);
+
+        // historial
+        $group->get('/transactions', [TransactionController::class, 'index']);
 
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
     // prueba de rutas protegidas con token
