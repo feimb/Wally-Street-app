@@ -5,7 +5,7 @@ use App\app\Middleware\IsLoggedMiddleware;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\OperationsController;
-
+use App\Controllers\PortfolioController;
 return function (app $app) {
     // prueba de rutas protegidas con token
     $app->group('/api', function ($group) {
@@ -21,10 +21,13 @@ return function (app $app) {
 
             return $response->withHeader('Content-Type', 'application/json');
         });
+        //users
         $group->put('/users/{user_id}', [UserController::class ,'updateUser']);
         $group->get('/users/{user_id}', [UserController::class ,'ObtenerUsuario']);
         $group->get('/users', [UserController::class ,'index']);
-
+        
+        // portafolio
+        $group->get('/portfolio', [PortfolioController::class, 'index']);
 
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
     // prueba de rutas protegidas con token
