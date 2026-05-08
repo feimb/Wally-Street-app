@@ -104,50 +104,73 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 # ✅ Checklist de implementación
 
 ## 🔐 Autenticación
+
 - [ ] POST /login
+    - [ ] 200 OK → Login exitoso
+    - [ ] 400 Bad Request → Datos faltantes o inválidos
+    - [ ] 401 Unauthorized → Credenciales incorrectas
+
 - [ ] POST /logout
-- [ ] Middleware de autenticación
-- [ ] Expiración y renovación de token
+    - [ ] 200 OK → Logout exitoso
+    - [ ] 401 Unauthorized → Token inválido o expirado
 
 ## 👤 Usuarios
+
 - [ ] POST /users (registro + validaciones)
+    - [ ] 200 OK → Usuario creado
+    - [ ] 400 Bad Request → Datos inválidos o faltantes
+    - [ ] 409 Conflict → Email/usuario ya existente
 - [ ] GET /users/{id}
+    - [ ] 200 OK → Usuario encontrado
+    - [ ] 401 Unauthorized → No autorizado
 - [ ] PUT /users/{id}
+    - [ ] 200 OK → Usuario actualizado
+    - [ ] 400 Bad Request → Datos inválidos
+    - [ ] 401 Unauthorized → No autorizado
 - [ ] GET /users
+    - [ ] 200 OK → Lista obtenida
+    - [ ] 401 Unauthorized → No autorizado
 
 ## 📊 Activos
+
 - [ ] GET /assets (con filtros)
+    - [ ] 200 OK → Lista obtenida
+    - [ ] 400 Bad Request → Filtros inválidos
 - [ ] PUT /assets (actualizar precios - admin)
+    - [ ] 200 OK → Precios actualizados
+    - [ ] 401 Unauthorized → No autorizado
 - [ ] GET /assets/{id}/history/{quantity}
-- [ ] Función de variación de precios
+    - [ ] 200 OK → Historial obtenido
+    - [ ] 404 Not Found → Asset no encontrado
 
 ## 💸 Operaciones
+
 - [ ] POST /trade/buy
-- [ ] Validación de saldo
-- [ ] Registro en portfolio
-- [ ] Registro en transactions
+    - [ ] 200 OK → Compra realizada
+    - [ ] 400 Bad Request → Datos inválidos
+    - [ ] 401 Unauthorized → Usuario no autorizado
+    - [ ] 404 Not Found → Asset no encontrado
+    - [ ] 409 Conflict → Saldo insuficiente
 
 - [ ] POST /trade/sell
-- [ ] Validación de cantidad
-- [ ] Actualización de balance
-- [ ] Registro en transactions
+    - [ ] 200 OK → Venta realizada
+    - [ ] 400 Bad Request → Datos inválidos
+    - [ ] 401 Unauthorized → Usuario no autorizado
+    - [ ] 404 Not Found → Asset no encontrado
+    - [ ] 409 Conflict → Cantidad insuficiente
 
 ## 📁 Portfolio e historial
+
 - [ ] GET /portfolio
+    - [ ] 200 OK → Portfolio obtenido
+    - [ ] 401 Unauthorized → Usuario no autenticado
 - [ ] DELETE /portfolio/{asset_id}
-- [ ] Validación de cantidad = 0
+    - [ ] 200 OK → Asset eliminado
+    - [ ] 401 Unauthorized → Usuario no autenticado
+    - [ ] 404 Not Found → Asset no encontrado en portfolio
+    - [ ] 409 Conflict → Quantity mayor a 0
+
 - [ ] GET /transactions
-- [ ] Filtros en historial
-
-## ⚠️ Validaciones y reglas
-- [ ] Manejo de errores HTTP
-- [ ] Mensajes de error claros
-- [ ] Validación de integridad en eliminaciones
-- [ ] Evitar operaciones inválidas
-
-## 🗄️ Base de datos
-- [ ] Crear tablas necesarias
-- [ ] Relaciones y claves foráneas
-- [ ] Insertar activos iniciales
-
----
+    - [ ] 200 OK → Historial obtenido
+    - [ ] 400 Bad Request → Filtros inválidos
+    - [ ] 401 Unauthorized → Usuario no autenticado
