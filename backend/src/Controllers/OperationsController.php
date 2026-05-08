@@ -27,7 +27,7 @@ class OperationsController {
             return $this->respuesta($response, "error la cantidad minima es de 1", 400);
         }
 
-        $existe = AssetsModel::ObtenerPrecioAsset($asset_id);
+        $existe = AssetsModel::ObtenerPrecioAsset($asset_id);//
         if ($existe==false) {
             return $this->respuesta($response, "error no existe el asset id requerido", 404);
         }
@@ -72,7 +72,7 @@ class OperationsController {
         if ($quantity < 1) {
             return $this->respuesta($response, "error la cantidad minima es de 1", 400);
         }
-          $existe = AssetsModel::ObtenerPrecioAsset($asset_id);
+          $existe = AssetsModel::ObtenerPrecioAsset($asset_id);//
 
         if ($existe==false) {
             return $this->respuesta($response, "error no existe el asset id requerido", 404);
