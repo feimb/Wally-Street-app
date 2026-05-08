@@ -37,7 +37,7 @@ class OperationsController {
         $saldo = $dato['balance'];
 
         if ($saldo < ($precioAsset * $quantity)) {
-            return $this->respuesta($response, "error saldo insuficiente", 409);
+            return $this->respuesta($response, "error saldo insuficiente", 400);
         }
         $dato2=PortfolioModel::ObtenerquantityAsset($user_id,$asset_id);
         if($dato2==false){
@@ -79,10 +79,11 @@ class OperationsController {
         }
         $dato2=PortfolioModel::ObtenerquantityAsset($user_id,$asset_id);
         if($dato2==false){
- return $this->respuesta($response,"error no tiene el asset en su portfolio",404);
+          return $this->respuesta($response,"error no tiene elementos del asset",404);;
+        }
         $quantity_total=$dato2['quantity'];// cantidad total de un asset;
         if($quantity_total<$quantity){
-             return $this->respuesta($response,"error cantidad requerida supera a la cantidad disponible ",400);
+             return $this->respuesta($response,"error cantidad requerida supera a la maxima ",404);
         }
         $precioAsset = $existe['precio'];
         $dato = UserModel::ObtenerSaldo($user_id);
@@ -94,5 +95,4 @@ class OperationsController {
 
         return $this->respuesta($response, "venta exitosa", 200);
     }
-}
 }
