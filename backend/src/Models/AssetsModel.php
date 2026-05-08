@@ -49,7 +49,7 @@ public static function ObtenerCambios($asset_id, $quantity) {
 }
 
 
-public static function existeAsset($id) { // comprueba si el asset existe y si existe me devuelve el precio
+public static function ObtenerPrecioAsset($id) { // comprueba si el asset existe y si existe me devuelve el precio
 
     $pdo = DB::conexion();
 
