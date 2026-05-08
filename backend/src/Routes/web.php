@@ -7,6 +7,7 @@ use App\Controllers\UserController;
 use App\Controllers\OperationsController;
 use App\Controllers\PortfolioController;
 use App\Controllers\TransactionController;
+use App\Controllers\AssetsController;
 
 return function (app $app) {
     // prueba de rutas protegidas con token
@@ -63,40 +64,17 @@ return function (app $app) {
     });
 
     //Activos
-    $app->get('/assets', function ($request, $response, $args) {
-        // filtros
-        // ?type={name}
-        // min_price: Precio mínimo (ej: ?min_price=50).
-        // max_price: Precio máximo (ej: ?max_price=500).
 
-        return;
-    });
-    $app->get('/assets/{asset_id}/history/{quantity}', function ($request, $response, $args) {
-        return;
-    });
-    $app->put('/assets', function ($request, $response, $args) {
-        // <<< solo admin  >>>
-        // Dispara la actualización aleatoria de los precios de todos
-        // los activos
-
-        return;
-    });
+$app->get('/assets', [AssetsController::class, 'index']);    // muestra los assets
+$app->put('/assets', [AssetsController::class, 'actualizarAssets'])->add(new IsLoggedMiddleware($app->getResponseFactory()));// actualiza los assets solo admin
+$app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive']); // historial de un asset
 
     // operaciones
 $app->post('/trade/sell', [OperationsController::class, 'sell'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
 
 $app->post('/trade/buy', [OperationsController::class, 'buy'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
 
-    // Portafolio y Historial
-    $app->get('/portfolio', function ($request, $response, $args) {
-        return;
-    });
-    $app->get('/transactions', function ($request, $response, $args) {
-        return;
-    });
-    $app->delete('/portfolio/{asset_id}', function ($request, $response, $args) {
-        return;
-    });
+
 
 
 };
