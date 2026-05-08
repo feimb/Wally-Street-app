@@ -64,7 +64,7 @@ public static function ObtenerInfoAssets()
 {
     $pdo = DB::conexion();
 
-    $sql = "SELECT id, current_price, last_update FROM assets";
+    $sql = "SELECT id, current_price FROM assets";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
