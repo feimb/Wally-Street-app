@@ -17,7 +17,7 @@ public function index(Request $request, Response $response): Response // mostrar
     $max = $query['max'] ?? null;
     $nom = $query['nombre'] ?? null;
     
-    $data = AssetsModel::obtenerAssets($pdo,$min, $max, $nom);
+    $data = AssetsModel::obtenerAssets($min, $max, $nom);
 
     if (empty($data)) {
        return  $this->respuesta($response,"no hay assets disponibles",404);

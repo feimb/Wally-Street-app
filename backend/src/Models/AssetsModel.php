@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\DB\DB;
-use PDO;
 
 class AssetsModel {
 
@@ -61,9 +60,10 @@ public static function existe($id):bool { // comprueba si el asset existe
 }
 public static function ObtenerPrecioAsset($id) { // comprueba si el asset existe y si existe me devuelve el precio
 
-    $pdo = DB::conexion();
+   $pdo = DB::conexion();
+   
+   $sql = "SELECT current_price as precio FROM assets WHERE id = :id";
 
-    $sql = "SELECT current_price as precio FROM assets WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id]);
 
