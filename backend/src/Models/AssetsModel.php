@@ -64,17 +64,24 @@ public static function ObtenerPrecioAsset($id) { // comprueba si el asset existe
    $pdo = DB::conexion();
    
    $sql = "SELECT current_price as precio FROM assets WHERE id = :id";
+   $stmt = $pdo->prepare($sql);
+
+    $stmt->execute(['id' => $id]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-public static function ObtenerInfoAssets()//
+
+public static function ObtenerInfoAssets()
 {
     $pdo = DB::conexion();
 
     $sql = "SELECT id, current_price FROM assets";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id' => $id]);
 
-    return  $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
