@@ -47,7 +47,16 @@ public static function ObtenerCambios($asset_id, $quantity) {
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+public static function existe($id):bool { // comprueba si el asset existe
 
+    $pdo = DB::conexion();
+
+    $sql = "SELECT 1 FROM assets WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+
+    return (bool) $stmt->fetch();
+}
 
 public static function existe($id):bool { // comprueba si el asset existe
 
