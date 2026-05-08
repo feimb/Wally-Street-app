@@ -59,6 +59,16 @@ public static function existe($id):bool { // comprueba si el asset existe
 
     return (bool) $stmt->fetch();
 }
+public static function ObtenerPrecioAsset($id) { // comprueba si el asset existe y si existe me devuelve el precio
+
+    $pdo = DB::conexion();
+
+    $sql = "SELECT current_price as precio FROM assets WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+
+    return  $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
 public static function ObtenerInfoAssets()
 {
