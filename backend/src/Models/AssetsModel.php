@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\DB\DB;
-use PDO;
+use PDO;//
 
 class AssetsModel {
 
@@ -60,7 +60,7 @@ public static function existe($id):bool { // comprueba si el asset existe
     return (bool) $stmt->fetch();
 }
 
-public static function ObtenerInfoAssets()
+public static function ObtenerInfoAssets()//
 {
     $pdo = DB::conexion();
 
