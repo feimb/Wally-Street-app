@@ -161,16 +161,16 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 
 ## 📁 Portfolio e historial
 
-- [ ] GET /portfolio
-    - [ ] 200 OK → Portfolio obtenido
-    - [ ] 401 Unauthorized → Usuario no autenticado
-- [ ] DELETE /portfolio/{asset_id}
-    - [ ] 200 OK → Asset eliminado
-    - [ ] 401 Unauthorized → Usuario no autenticado
-    - [ ] 404 Not Found → Asset no encontrado en portfolio
-    - [ ] 409 Conflict → Quantity mayor a 0
+- [x] GET /portfolio
+    - [x] 200 OK → Portfolio obtenido
+    - [x] 401 Unauthorized → Usuario no autenticado
+- [x] DELETE /portfolio/{asset_id}
+    - [x] 200 OK → Asset eliminado
+    - [x] 401 Unauthorized → Usuario no autenticado
+    - [x] 404 Not Found → Asset no encontrado en portfolio
+    - [x] 409 Conflict → Quantity mayor a 0
 
-- [ ] GET /transactions
-    - [ ] 200 OK → Historial obtenido
-    - [ ] 400 Bad Request → Filtros inválidos
-    - [ ] 401 Unauthorized → Usuario no autenticado
+- [x] GET /transactions
+    - [x] 200 OK → Historial obtenido
+    - [x] 400 Bad Request → Filtros inválidos
+    - [x] 401 Unauthorized → Usuario no autenticado
