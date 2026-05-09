@@ -127,9 +127,9 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
     - [x] 200 OK → Usuario actualizado
     - [x] 400 Bad Request → Datos inválidos
     - [x] 401 Unauthorized → No autorizado
-- [ ] GET /users
-    - [ ] 200 OK → Lista obtenida
-    - [ ] 401 Unauthorized → No autorizado
+- [x] GET /users
+    - [x] 200 OK → Lista obtenida
+    - [x] 401 Unauthorized → No autorizado
 
 ## 📊 Activos
 
