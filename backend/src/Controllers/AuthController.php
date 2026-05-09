@@ -19,7 +19,14 @@ class AuthController
         $email = $data['email'] ??  '';
         $password  = $data['password'] ??  '';
 
-
+        if($email === '' || $password === ''){
+            $response->getBody()->write(json_encode([
+                "error" => "datos faltantes"
+            ]));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(400);
+        };
         $pdo = DB::conexion();
 
 

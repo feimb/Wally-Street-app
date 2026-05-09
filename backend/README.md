@@ -105,10 +105,10 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 
 ## 🔐 Autenticación
 
-- [ ] POST /login
-    - [ ] 200 OK → Login exitoso
-    - [ ] 400 Bad Request → Datos faltantes o inválidos
-    - [ ] 401 Unauthorized → Credenciales incorrectas
+- [x] POST /login
+    - [x] 200 OK → Login exitoso
+    - [x] 400 Bad Request → Datos faltantes o inválidos
+    - [x] 401 Unauthorized → Credenciales incorrectas
 
 - [ ] POST /logout
     - [ ] 200 OK → Logout exitoso
