@@ -51,19 +51,19 @@ class UserController
         $nombre = $dato['nombre'] ?? '';
 
         if (!$email || !$password || !$nombre) {
-            return $this->error($response, "faltan datos");
+            return $this->errorCode($response, "faltan datos", 400);
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->error($response, "email inválido");
+            return $this->errorCode($response, "email inválido", 409);
         }
 
         if (strlen($password) < 8 || strlen($nombre) < 3) {
-            return $this->error($response, "datos muy cortos");
+            return $this->errorCode($response, "datos muy cortos", 400);
         }
 
         if ((bool)UserModel::existe($email)) {
-            return $this->error($response, "el usuario ya existe");
+            return $this->errorCode($response, "el email ya existe",409);
         }
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 

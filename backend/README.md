@@ -116,10 +116,10 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 
 ## 👤 Usuarios
 
-- [ ] POST /users (registro + validaciones)
-    - [ ] 200 OK → Usuario creado
-    - [ ] 400 Bad Request → Datos inválidos o faltantes
-    - [ ] 409 Conflict → Email/usuario ya existente
+- [x] POST /users (registro + validaciones)
+    - [x] 201 OK → Usuario creado
+    - [x] 400 Bad Request → Datos inválidos o faltantes
+    - [x] 409 Conflict → Email/usuario ya existente
 - [ ] GET /users/{id}
     - [ ] 200 OK → Usuario encontrado
     - [ ] 401 Unauthorized → No autorizado
