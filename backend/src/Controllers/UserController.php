@@ -152,7 +152,9 @@ class UserController
         $userIdParam = $args["user_id"];
         $userIdToken = $request->getAttribute("usuario");
 
-        if ($userIdParam != $userIdToken) {
+        $isAdmin = UserModel::esAdmin($userIdToken);
+
+        if ($userIdParam != $userIdToken && !$isAdmin) {
             return $this->errorCode($response, "No autorizado", 403);
         }
 
