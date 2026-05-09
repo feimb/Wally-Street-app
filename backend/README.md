@@ -133,12 +133,12 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 
 ## 📊 Activos
 
-- [ ] GET /assets (con filtros)
-    - [ ] 200 OK → Lista obtenida
-    - [ ] 400 Bad Request → Filtros inválidos
-- [ ] PUT /assets (actualizar precios - admin)
-    - [ ] 200 OK → Precios actualizados
-    - [ ] 401 Unauthorized → No autorizado
+- [x] GET /assets (con filtros)
+    - [x] 200 OK → Lista obtenida
+    - [x] 400 Bad Request → Filtros inválidos
+- [x] PUT /assets (actualizar precios - admin)
+    - [x] 200 OK → Precios actualizados
+    - [x] 401 Unauthorized → No autorizado
 - [ ] GET /assets/{id}/history/{quantity}
     - [ ] 200 OK → Historial obtenido
     - [ ] 404 Not Found → Asset no encontrado
