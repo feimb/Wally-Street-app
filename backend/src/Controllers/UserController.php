@@ -63,7 +63,7 @@ class UserController
         }
 
         if ((bool)UserModel::existe($email)) {
-            return $this->errorCode($response, "el email ya existe",409);
+            return $this->errorCode($response, "el email ya existe", 409);
         }
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
@@ -131,22 +131,33 @@ class UserController
             ->withHeader("Content-Type", "application/json")
             ->withStatus($code);
     }
-    public static function updateUser($request, $response, $args)
+    public function updateUser($request, $response, $args): Response
     {
         $data = $request->getParsedBody();
 
         $name = $data["name"] ?? null;
         $password = $data["password"] ?? null;
+        if ($name !== null) {
+            if (strlen($name) < 3) {
+                return $this->errorCode($response, "nombre muy corto", 400);
+            }
+        }
+        if ($password !== null) {
+            if (strlen($password) < 8) {
+                return $this->errorCode($response, "password muy corto", 400);
+            }
+        }
+
 
         $userIdParam = $args["user_id"];
         $userIdToken = $request->getAttribute("usuario");
 
         if ($userIdParam != $userIdToken) {
-            return self::errorCode($response, "No autorizado", 403);
+            return $this->errorCode($response, "No autorizado", 403);
         }
 
         if (!$name && !$password) {
-            return self::errorCode($response, "Nada para actualizar", 400);
+            return $this->errorCode($response, "Nada para actualizar", 400);
         }
 
         if ($password) {

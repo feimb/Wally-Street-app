@@ -120,13 +120,13 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
     - [x] 201 OK → Usuario creado
     - [x] 400 Bad Request → Datos inválidos o faltantes
     - [x] 409 Conflict → Email/usuario ya existente
-- [ ] GET /users/{id}
-    - [ ] 200 OK → Usuario encontrado
-    - [ ] 401 Unauthorized → No autorizado
-- [ ] PUT /users/{id}
-    - [ ] 200 OK → Usuario actualizado
-    - [ ] 400 Bad Request → Datos inválidos
-    - [ ] 401 Unauthorized → No autorizado
+- [x] GET /users/{id}   
+    - [x] 200 OK → Usuario encontrado
+    - [x] 403 Unauthorized → No autorizado
+- [x] PUT /users/{id}
+    - [x] 200 OK → Usuario actualizado
+    - [x] 400 Bad Request → Datos inválidos
+    - [x] 401 Unauthorized → No autorizado
 - [ ] GET /users
     - [ ] 200 OK → Lista obtenida
     - [ ] 401 Unauthorized → No autorizado
