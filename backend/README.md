@@ -110,9 +110,9 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
     - [x] 400 Bad Request → Datos faltantes o inválidos
     - [x] 401 Unauthorized → Credenciales incorrectas
 
-- [ ] POST /logout
-    - [ ] 200 OK → Logout exitoso
-    - [ ] 401 Unauthorized → Token inválido o expirado
+- [x] POST /logout
+    - [x] 200 OK → Logout exitoso
+    - [x] 401 Unauthorized → Token inválido o expirado
 
 ## 👤 Usuarios
 
