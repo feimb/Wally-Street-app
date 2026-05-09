@@ -145,19 +145,19 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 
 ## 💸 Operaciones
 
-- [ ] POST /trade/buy
-    - [ ] 200 OK → Compra realizada
-    - [ ] 400 Bad Request → Datos inválidos
-    - [ ] 401 Unauthorized → Usuario no autorizado
-    - [ ] 404 Not Found → Asset no encontrado
-    - [ ] 409 Conflict → Saldo insuficiente
+- [x] POST /trade/buy
+    - [x] 200 OK → Compra realizada
+    - [x] 400 Bad Request → Datos inválidos
+    - [x] 401 Unauthorized → Usuario no autorizado
+    - [x] 404 Not Found → Asset no encontrado
+    - [x] 409 Conflict → Saldo insuficiente
 
-- [ ] POST /trade/sell
-    - [ ] 200 OK → Venta realizada
-    - [ ] 400 Bad Request → Datos inválidos
-    - [ ] 401 Unauthorized → Usuario no autorizado
-    - [ ] 404 Not Found → Asset no encontrado
-    - [ ] 409 Conflict → Cantidad insuficiente
+- [x] POST /trade/sell
+    - [x] 200 OK → Venta realizada
+    - [x] 400 Bad Request → Datos inválidos
+    - [x] 401 Unauthorized → Usuario no autorizado
+    - [x] 404 Not Found → Asset no encontrado
+    - [x] 409 Conflict → Cantidad insuficiente
 
 ## 📁 Portfolio e historial
 

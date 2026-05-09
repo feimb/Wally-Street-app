@@ -41,7 +41,7 @@ class OperationsController {
         }
         $dato2=PortfolioModel::ObtenerquantityAsset($user_id,$asset_id);
         if($dato2==false){
-          Portfolio::Registrar($user_id,$asset_id,$quantity);
+          PortfolioModel::Registrar($user_id,$asset_id,$quantity);
         }
         $saldo = $saldo - ($precioAsset * $quantity);
         $quantity_total=$dato2['quantity']+$quantity;
