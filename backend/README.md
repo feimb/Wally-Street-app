@@ -139,9 +139,9 @@ Cada usuario inicia con un balance de **1000 USD** y puede operar con distintos 
 - [x] PUT /assets (actualizar precios - admin)
     - [x] 200 OK → Precios actualizados
     - [x] 401 Unauthorized → No autorizado
-- [ ] GET /assets/{id}/history/{quantity}
-    - [ ] 200 OK → Historial obtenido
-    - [ ] 404 Not Found → Asset no encontrado
+- [x] GET /assets/{id}/history/{quantity}
+    - [x] 200 OK → Historial obtenido
+    - [x] 404 Not Found → Asset no encontrado
 
 ## 💸 Operaciones
 
