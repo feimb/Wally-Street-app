@@ -32,7 +32,7 @@ public function retreive(Request $request, Response $response,  $args): Response
     if(AssetsModel::existe($asset_id)==false){
         return $this->respuesta($response,"error el asset no existe",404);
     }
-    if($quantity<0){
+    if($quantity<=0){
        return $this->respuesta($response,"error no puede ser menor que 1",400);
     }
   $quantity=min($quantity,5);// limitamos el acceso por mas que el usuario quiera mas de 5
