@@ -1,81 +1,65 @@
-
 <?php
+
 use Slim\App;
+
 use App\app\Middleware\IsLoggedMiddleware;
+
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
-use App\Controllers\OperationsController;
+use App\Controllers\AssetsController;
 use App\Controllers\PortfolioController;
 use App\Controllers\TransactionController;
-use App\Controllers\AssetsController;
+use App\Controllers\OperationsController;
 
-return function (app $app) {
-    // prueba de rutas protegidas con token
-    $app->group('/api', function ($group) {
-        $group->get('/', function ($request, $response, $args) {
+return function (App $app) {
 
-            $usuario = $request->getAttribute('usuario');
+    // auth
+    $app->post('/login', [AuthController::class, 'login']);
 
-            $response->getBody()->write(json_encode([
-                "mensaje" => "Hello world!",
-                "usuario" => $usuario
-            ]));
+    $app->post('/logout', [AuthController::class, 'logout'])
+        ->add(new IsLoggedMiddleware($app->getResponseFactory()));
 
 
-            return $response->withHeader('Content-Type', 'application/json');
-        });
-        //users
-        $group->put('/users/{user_id}', [UserController::class ,'updateUser']);
-        $group->get('/users/{user_id}', [UserController::class ,'ObtenerUsuario']);
-        $group->get('/users', [UserController::class ,'index']);
-        
-        // portafolio
-        $group->get('/portfolio', [PortfolioController::class, 'index']);
+    // users
 
-        $group->delete('/portfolio/{asset_id}', [PortfolioController::class, 'delete']);
+    $app->post('/users', [UserController::class, 'retrieve']);
+    $app->group('/users', function ($users) {
 
-        // historial
-        $group->get('/transactions', [TransactionController::class, 'index']);
+        $users->get('/{user_id}', [UserController::class, 'ObtenerUsuario']);
+
+        $users->put('/{user_id}', [UserController::class, 'updateUser']);
+
+        $users->get('', [UserController::class, 'index']);
+    })->add(new IsLoggedMiddleware($app->getResponseFactory()));
+
+    // Activos
+    $app->get('/assets', [AssetsController::class, 'index']);
+
+    $app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive']);
+
+
+    $app->put('/assets', [AssetsController::class, 'actualizarAssets'])
+        ->add(new IsLoggedMiddleware($app->getResponseFactory()));
+
+
+    // portfolio
+    $app->group('/portfolio', function ($portfolio) {
+
+        $portfolio->get('', [PortfolioController::class, 'index']);
+
+        $portfolio->delete('/{asset_id}', [PortfolioController::class, 'delete']);
+
 
     })->add(new IsLoggedMiddleware($app->getResponseFactory()));
-    // prueba de rutas protegidas con token
-    $app->get('/hola', function ($request, $response, $args) {
 
-        $usuario = $request->getAttribute('usuario');
+    $app->get('/transactions', [TransactionController::class, 'index'])
+        ->add(new IsLoggedMiddleware($app->getResponseFactory()));
 
-        $response->getBody()->write(json_encode([
-            "mensaje" => "Hello world!",
-            "usuario" => $usuario
-        ]));
-        return $response->withHeader('Content-Type', 'application/json');
-    });
-    // Autenticacion
+    // compra y venta 
+    $app->group('/trade', function ($trade) {
 
-    $app->post('/login', [AuthController::class, 'login']);
-    $app->post('/logout', [AuthController::class, 'logout']);
+        $trade->post('/buy', [OperationsController::class, 'buy']);
 
-    // Usuarios
-    $app->post('/users', [UserController::class, 'retrieve']);
-    $app->get('/users/{user_id}', function ($request, $response, $args) {
-        return;
-    });
-    $app->post('/users/{user_id}', function ($request, $response, $args) {
-        return;
-    });
-
-    //Activos
-
-$app->get('/assets', [AssetsController::class, 'index']);    // muestra los assets
-$app->put('/assets', [AssetsController::class, 'actualizarAssets'])->add(new IsLoggedMiddleware($app->getResponseFactory()));// actualiza los assets solo admin
-$app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive']); // historial de un asset
-
-    // operaciones
-$app->post('/trade/sell', [OperationsController::class, 'sell'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
-
-$app->post('/trade/buy', [OperationsController::class, 'buy'])->add(new IsLoggedMiddleware($app->getResponseFactory()));
-
-
-
-
+        $trade->post('/sell', [OperationsController::class, 'sell']);
+    })->add(new IsLoggedMiddleware($app->getResponseFactory()));
 };
-
