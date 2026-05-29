@@ -13,17 +13,17 @@ public static function obtenerAssets($min, $max, $nom) {
     $sql = "SELECT name as Nombre, current_price as Precio FROM assets WHERE 1";
     $params = [];
 
-    if ($min !== null) {
+    if ($min != null) {
         $sql .= " AND current_price >= :min";
         $params["min"] = $min;
     }
 
-    if ($max !== null) {
+    if ($max != null) {
         $sql .= " AND current_price <= :max";
         $params["max"] = $max;
     }
 
-    if ($nom !== null) {
+    if ($nom !== "") {
         $sql .= " AND name = :nom"; 
         $params["nom"] = $nom;
     }
