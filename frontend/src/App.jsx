@@ -1,10 +1,19 @@
-
+import { Routes, Route } from "react-router"
+import { MainLayout } from "./layouts/MainLayout"
 
 function App() {
 
   return (
     <>
-      <div className="">hola</div>
+      <MainLayout >
+
+
+        {/* <Routes>
+
+        </Routes> */}
+
+      </MainLayout>
+
     </>
   )
 }
