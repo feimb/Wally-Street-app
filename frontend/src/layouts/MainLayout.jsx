@@ -16,6 +16,7 @@ export const MainLayout = ({ child }) => {
                 <HeaderComponent />
                 <NavBarComponent />
             </header>
+            {child}
             <footer className="w-full fixed bottom-0 py-2 px-6 bg-neutral">
                 <FooterComponent />
             </footer>
