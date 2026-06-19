@@ -4,7 +4,7 @@ import { NavBarComponent } from "../components/NavBarComponent";
 import { FooterComponent } from "../components/FooterComponent";
 import axios from "axios";
 
-export const MainLayout = ({ child }) => {
+export const MainLayout = ({ children }) => {
     const token =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjo1LCJ0b2tlbl9leHBpcmVkX2F0IjoiMjAyNi0wNi0wMyAxOTo0NDoxOSJ9.CvykQs4L3h4_9_XWhHz1NgKocJ5m-Viblsk52twhh9U";
     const userId = window.atob(token.split(".")[1]);
@@ -16,7 +16,7 @@ export const MainLayout = ({ child }) => {
                 <HeaderComponent />
                 <NavBarComponent />
             </header>
-            {child}
+            {children}
             <footer className="w-full fixed bottom-0 py-2 px-6 bg-neutral">
                 <FooterComponent />
             </footer>
