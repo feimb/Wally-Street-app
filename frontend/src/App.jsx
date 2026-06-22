@@ -1,21 +1,15 @@
 import { Routes, Route } from "react-router"
-import { MainLayout } from "./layouts/MainLayout"
+import { Login } from "./pages/login/index"
+import WallyRoutes from "./Routes/WallyRoutes"
 
 function App() {
 
   return (
     <>
-      <MainLayout >
-
-
-        {/* <Routes>
-
-        </Routes> */}
-
-      </MainLayout>
-
+      <WallyRoutes />
     </>
   )
 }
 
 export default App
+
