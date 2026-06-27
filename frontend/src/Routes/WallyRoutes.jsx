@@ -2,12 +2,13 @@ import { Routes, Route, BrowserRouter } from "react-router";
 import { ProtectedRoute } from "./protectRoute/ProtectedRoute";
 import { Login } from "../pages/login";
 import { Portfolio } from "../pages/portafolio/Index";
+import { RegistroPage } from "../pages/registro/RegistroPage";
 function WallyRoutes() {
     return (
         <Routes>
             {/* Públicas */}
             {/* <Route path="/" element={<Stat />} /> */}
-            {/* <Route path="/registro" element={<Registro />} /> */}
+            <Route path="/registro" element={<RegistroPage />} />
             <Route path="/login" element={<Login />} />
 
             {/* Privadas */}
