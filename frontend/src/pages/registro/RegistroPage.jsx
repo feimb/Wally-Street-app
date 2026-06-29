@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { InputText } from "../../components/common/InputText";
 import { Wallet } from "lucide-react";
-import { validarRegistro } from "../../utils/validarRegistro";
+import { validarDatos } from "../../utils/validarDatos";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 
@@ -18,7 +18,7 @@ export const RegistroPage = () => {
         setErrors([]);
         setSuccessMessage("");
 
-        const validationErrors = validarRegistro({ email, username, password });
+        const validationErrors = validarDatos({ email, username, password });
         if (validationErrors.length > 0) {
             setErrors(validationErrors);
             return;
