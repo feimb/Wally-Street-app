@@ -10,7 +10,7 @@ class AssetsModel {
 public static function obtenerAssets($min, $max, $nom) {
     $pdo = DB::conexion();
 
-    $sql = "SELECT name as Nombre, current_price as Precio FROM assets WHERE 1";
+    $sql = "SELECT id,name as Nombre, current_price as Precio FROM assets WHERE 1";
     $params = [];
 
     if ($min != null) {
@@ -24,8 +24,8 @@ public static function obtenerAssets($min, $max, $nom) {
     }
 
     if ($nom !== "") {
-        $sql .= " AND name = :nom"; 
-        $params["nom"] = $nom;
+         $sql .= " AND name LIKE :nom";
+         $params["nom"] = "%".$nom."%";
     }
 
     $stmt = $pdo->prepare($sql);
