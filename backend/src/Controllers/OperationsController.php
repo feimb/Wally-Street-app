@@ -20,11 +20,9 @@ class OperationsController {
         if (trim($asset_id) ==="") {
             return $this->respuesta($response, "error falta asset_id", 400);
         }
-        if (!ctype_digit($quantity) ){
-            return $this->respuesta($response, "error falta cantidad", 400);
-        }
+ 
         if ($quantity < 1) {
-            return $this->respuesta($response, "error la cantidad minima es de 1", 400);
+            return $this->respuesta($response, "error la cantidad minima es  1", 400);
         }
 
         $existe = AssetsModel::ObtenerPrecioAsset($asset_id);//
@@ -37,7 +35,7 @@ class OperationsController {
         $saldo = $dato['balance'];
 
         if ($saldo < ($precioAsset * $quantity)) {
-            return $this->respuesta($response, "error saldo insuficiente", 400);
+            return $this->respuesta($response, "error saldo insuficiente", 409);
         }
         $dato2=PortfolioModel::ObtenerquantityAsset($user_id,$asset_id);
         if($dato2==false){
