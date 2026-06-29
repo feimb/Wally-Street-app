@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { InputText } from "../../components/common/InputText";
 import { Wallet } from "lucide-react";
+import { validarDatos } from "../../utils/validarDatos";
 import api from "../../services/api";
+import useAuth from "../../hooks/useAuth";
 
 export const RegistroPage = () => {
     const [email, setEmail] = useState("");
@@ -9,60 +11,32 @@ export const RegistroPage = () => {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
     const [successMessage, setSuccessMessage] = useState("");
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-
-    function validateForm() {
-        const newErrors = [];
-
-        if (!emailRegex.test(email.trim())) {
-            newErrors.push("El email debe tener un formato válido.");
-        }
-
-        if (!username.trim()) {
-            newErrors.push("El nombre de usuario no puede ser vacío.");
-        } else if (username.trim().length > 30) {
-            newErrors.push(
-                "El nombre de usuario no puede superar los 30 caracteres.",
-            );
-        }
-
-        if (!passwordRegex.test(password)) {
-            newErrors.push(
-                "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y caracteres especiales.",
-            );
-        }
-
-        return newErrors;
-    }
+    const { token, login } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
         setErrors([]);
         setSuccessMessage("");
 
-        const validationErrors = validateForm();
+        const validationErrors = validarDatos({ email, username, password });
         if (validationErrors.length > 0) {
             setErrors(validationErrors);
             return;
         }
 
         try {
-            // Ajustar el endpoint según tu backend real.
             await api.post("/users", {
                 email: email.trim(),
                 nombre: username.trim(),
                 password,
             });
 
-            setSuccessMessage(
-                "Usuario registrado correctamente. Ya puedes iniciar sesión.",
-            );
+            setSuccessMessage("Usuario registrado correctamente.");
+            login(email,password)
             setEmail("");
             setUsername("");
             setPassword("");
+            navigation();
         } catch (error) {
             const apiMessage =
                 error?.response?.data?.message ||
@@ -83,7 +57,7 @@ export const RegistroPage = () => {
 
     return (
         <form
-            className="p-8 bg-neutral flex flex-col w-lg mt-8 mx-auto rounded-lg"
+            className="mb-16 p-8 bg-neutral flex flex-col w-lg mt-8 mx-auto rounded-lg"
             onSubmit={handleSubmit}
         >
             <div className="flex flex-col items-center gap-2 mb-4">
@@ -91,8 +65,6 @@ export const RegistroPage = () => {
                 <h2 className="text-primary text-xl font-bold">WallyStreet</h2>
                 <p className="text-lg">Registro de Usuario</p>
             </div>
-
-  
 
             <div className="flex flex-col gap-8">
                 <InputText
@@ -124,7 +96,7 @@ export const RegistroPage = () => {
             )}
             {errors.length > 0 && (
                 <div className="mt-4 rounded-lg border border-red-400 bg-red-50 p-3 text-red-700">
-                    <ul className="list-disc pl-5 space-y-1">
+                    <ul className="list-disc pl-5 ">
                         {errors.map((error, index) => (
                             <li key={index}>{error}</li>
                         ))}

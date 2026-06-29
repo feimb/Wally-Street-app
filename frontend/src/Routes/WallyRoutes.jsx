@@ -3,6 +3,7 @@ import { ProtectedRoute } from "./protectRoute/ProtectedRoute";
 import { Login } from "../pages/login";
 import { Portfolio } from "../pages/portafolio/Index";
 import { RegistroPage } from "../pages/registro/RegistroPage";
+import { EditarUsuarioPage } from "../pages/editarUsuario/EditarUsuarioPage";
 import StatPage from "../pages/stat/StatPage";
 import { AssetsComponent } from "../components/AssetsComponent";
 
@@ -18,7 +19,10 @@ function WallyRoutes() {
 
             {/* Privadas */}
             <Route element={<ProtectedRoute />}>
-                <Route path="/portfolio" element={<Portfolio />} />
+             <Route path="/portfolio" element={<Portfolio />} />
+             {/* <Route path="/operaciones" element={<Operaciones />} />
+                <Route path="/panel" element={<Panel />} /> */}
+                <Route path="/editar" element={<EditarUsuarioPage />} />
                 <Route path="/panel" element={<AssetsComponent />} />
             </Route>
 
