@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router";
 import { ProtectedRoute } from "./protectRoute/ProtectedRoute";
 import { Login } from "../pages/login";
-import { Portfolio } from "../pages/portafolio/index";
+import { Portfolio } from "../pages/portafolio/PortfolioPage";
 import { RegistroPage } from "../pages/registro/RegistroPage";
 import { EditarUsuarioPage } from "../pages/editarUsuario/EditarUsuarioPage";
 import StatPage from "../pages/stat/StatPage";
