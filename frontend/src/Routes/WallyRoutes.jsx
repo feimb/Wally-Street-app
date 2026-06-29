@@ -6,26 +6,26 @@ import { RegistroPage } from "../pages/registro/RegistroPage";
 import { EditarUsuarioPage } from "../pages/editarUsuario/EditarUsuarioPage";
 import StatPage from "../pages/stat/StatPage";
 import { AssetsComponent } from "../components/AssetsComponent";
-
+import { MainLayout } from "../layouts/MainLayout";
 
 function WallyRoutes() {
     return (
         <Routes>
+            <Route element={<MainLayout/>}>
+                {/* Públicas */}
+                <Route path="/registro" element={<RegistroPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<StatPage />} />
 
-            {/* Públicas */}
-            <Route path="/registro" element={<RegistroPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<StatPage />} />
-
-            {/* Privadas */}
-            <Route element={<ProtectedRoute />}>
-             <Route path="/portfolio" element={<Portfolio />} />
-             {/* <Route path="/operaciones" element={<Operaciones />} />
+                {/* Privadas */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/portfolio" element={<Portfolio />} />
+                    {/* <Route path="/operaciones" element={<Operaciones />} />
                 <Route path="/panel" element={<Panel />} /> */}
-                <Route path="/editar" element={<EditarUsuarioPage />} />
-                <Route path="/panel" element={<AssetsComponent />} />
+                    <Route path="/editar" element={<EditarUsuarioPage />} />
+                    <Route path="/panel" element={<AssetsComponent />} />
+                </Route>
             </Route>
-
         </Routes>
     );
 }
