@@ -96,7 +96,7 @@ export const RegistroPage = () => {
             )}
             {errors.length > 0 && (
                 <div className="mt-4 rounded-lg border border-red-400 bg-red-50 p-3 text-red-700">
-                    <ul className="list-disc pl-5 space-y-1">
+                    <ul className="list-disc pl-5 ">
                         {errors.map((error, index) => (
                             <li key={index}>{error}</li>
                         ))}

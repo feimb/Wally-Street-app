@@ -3,6 +3,7 @@ import { ProtectedRoute } from "./protectRoute/ProtectedRoute";
 import { Login } from "../pages/login";
 import { Portfolio } from "../pages/portafolio/Index";
 import { RegistroPage } from "../pages/registro/RegistroPage";
+import { EditarUsuarioPage } from "../pages/editarUsuario/EditarUsuarioPage";
 function WallyRoutes() {
     return (
         <Routes>
@@ -15,8 +16,8 @@ function WallyRoutes() {
             <Route element={<ProtectedRoute />}>
              <Route path="/portfolio" element={<Portfolio />} />
              {/* <Route path="/operaciones" element={<Operaciones />} />
-                <Route path="/panel" element={<Panel />} />
-                <Route path="/editar" element={<EditarUsuario />} />  */}
+                <Route path="/panel" element={<Panel />} /> */}
+                <Route path="/editar" element={<EditarUsuarioPage />} /> 
             </Route>
 
             {/* Admin */}
