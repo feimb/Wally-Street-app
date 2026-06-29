@@ -1,7 +1,7 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-export function validarRegistro({ email, username, password }) {
+export function validarDatos({ email, username, password }) {
     const errors = [];
 
     if (!emailRegex.test(email.trim())) {
