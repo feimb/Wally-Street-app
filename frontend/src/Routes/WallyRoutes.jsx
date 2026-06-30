@@ -18,7 +18,8 @@ function WallyRoutes() {
                 <Route path="/" element={<StatPage />} />
 
                 {/* Privadas */}
-                <Route element={<ProtectedRoute />}>
+                {/* element={<ProtectedRoute />} */}
+                <Route >
                     <Route path="/portfolio" element={<Portfolio />} />
                     {/* <Route path="/operaciones" element={<Operaciones />} />
                 <Route path="/panel" element={<Panel />} /> */}
