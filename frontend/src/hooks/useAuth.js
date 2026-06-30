@@ -55,7 +55,7 @@ function useAuth() {
 
             localStorage.setItem("token", authToken);
             setToken(authToken);
-            navigate("/");
+            window.location.href = "/"
         } catch (error) {
             console.error("Error en login:", error);
         }
