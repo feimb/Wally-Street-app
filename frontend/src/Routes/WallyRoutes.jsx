@@ -7,6 +7,7 @@ import { EditarUsuarioPage } from "../pages/editarUsuario/EditarUsuarioPage";
 import StatPage from "../pages/stat/StatPage";
 import { AssetsComponent } from "../components/AssetsComponent";
 import { MainLayout } from "../layouts/MainLayout";
+import TransactionsComponent from "../components/TransactionsComponent";
 
 function WallyRoutes() {
     return (
@@ -25,7 +26,11 @@ function WallyRoutes() {
                 <Route path="/panel" element={<Panel />} /> */}
                     <Route path="/editar" element={<EditarUsuarioPage />} />
                     <Route path="/panel" element={<AssetsComponent />} />
+                    <Route path="/operaciones" element={<TransactionsComponent />} />
+
                 </Route>
+
+    
             </Route>
         </Routes>
     );
