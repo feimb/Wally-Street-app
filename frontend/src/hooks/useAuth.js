@@ -1,10 +1,41 @@
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 function useAuth() {
     const [token, setToken] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const decoded = jwtDecode(token);
+                const id = decoded.usuario
+                const response = await api.get(`/users/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUser(response.data);
+            } catch (error) {
+                console.error("Error al obtener usuario:", error);
+                logout();
+            } finally {
+                console.log(user)
+                setLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, [token]);
     async function login(email, password) {
         try {
             const response = await api.post("/login", { email, password });
@@ -24,7 +55,7 @@ function useAuth() {
 
             localStorage.setItem("token", authToken);
             setToken(authToken);
-            navigate("/");
+            window.location.href = "/"
         } catch (error) {
             console.error("Error en login:", error);
         }
@@ -33,10 +64,11 @@ function useAuth() {
     function logout() {
         localStorage.removeItem("token");
         setToken(null);
+        setUser(null);
         navigate("/login");
     }
 
-    return { token, login, logout };
+    return { token, login, logout, user, loading };
 }
 
 export default useAuth;
