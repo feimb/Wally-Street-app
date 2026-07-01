@@ -36,19 +36,34 @@ Ejemplo:
 
 - React 19
 - Vite 8
-- Tailwind CSS 4
-- @tailwindcss/vite
-- React Router / React Router DOM 7
-- Axios
-- jwt-decode
-- Recharts
-- lucide-react
-- ESLint 10
-- eslint-plugin-react-hooks
-- eslint-plugin-react-refresh
+- Axios 
+- Tailwind CSS 4 — Framework de utilidades CSS; permite estilizar componentes directamente en el HTML/JSX con clases predefinidas, sin escribir CSS custom.
+- jwt-decode — Librería liviana para decodificar tokens JWT en el cliente (sin verificar la firma), útil para leer el payload como el rol o el id del usuario.
+- Recharts — Librería de gráficos para React (barras, líneas, torta, etc.), construida sobre D3 pero con componentes declarativos fáciles de usar.
+- lucide-react — Set de íconos SVG como componentes de React, liviano y muy usado junto con Tailwind.
+- ESLint 10 — Linter que analiza el código JS/TS en busca de errores, malas prácticas o problemas de estilo, ayudando a mantener consistencia en el proyecto.
+
 
 ---
 
+## Cambios en la API
+
+### Endpoints de usuario
+
+Se modificaron todos los endpoints que interactúan con el usuario para que devuelvan también su `id`
+- get user
+- get users
+
+### Validación de parámetros GET
+
+Se agregó validación en los parámetros GET de los endpoints de **historial** y **assets** para evitar valores fuera de rango. Específicamente:
+
+- No se aceptan valores **negativos**.
+- No se aceptan valores **mayores al máximo permitido** para ese recurso.
+
+Si el parámetro no cumple con estas condiciones, el endpoint responde con un error de validación en lugar de procesar la solicitud.
+
+---
 # 🔐 Login (`index.jsx`)
 
 Formulario de inicio de sesión.
