@@ -9,6 +9,7 @@ import { AssetsComponent } from "../components/AssetsComponent";
 import { MainLayout } from "../layouts/MainLayout";
 import TransactionsComponent from "../components/TransactionsComponent";
 import ManejoUsuariosPage from "../pages/manejoDeUsuarios/ManejoUsuariosPage";
+import {AdminRoute} from "./protectRoute/AdminRoute";
 
 function WallyRoutes() {
     return (
@@ -20,18 +21,20 @@ function WallyRoutes() {
                 <Route path="/" element={<StatPage />} />
 
                 {/* Privadas */}
-                {/* element={<ProtectedRoute />} */}
-                <Route >
+                <Route  element={<ProtectedRoute/>}>
                     <Route path="/portfolio" element={<Portfolio />} />
                     <Route path="/editar" element={<EditarUsuarioPage />} />
                     <Route path="/panel" element={<AssetsComponent />} />
                     <Route path="/operaciones" element={<TransactionsComponent />} />
 
-                </Route>
+                </Route  >
                 {/* Admin */}
-                <Route path="/manejoUsuarios" element={<ManejoUsuariosPage />}>
-                    
+                <Route  element={<AdminRoute/>}>
+                    <Route path="/manejoUsuarios" element={<ManejoUsuariosPage />}/>
+
                 </Route>
+                    
+                
 
     
             </Route>

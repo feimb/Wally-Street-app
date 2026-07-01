@@ -12,13 +12,16 @@ function isTokenValid(token) {
     }
 }
 
-export function ProtectedRoute() {
+export function AdminRoute() {
     const token = localStorage.getItem("token");
 
     if (!isTokenValid(token)) {
         localStorage.removeItem("token");
         return <Navigate to="/login" replace />;
     }
+
+    const decoded = jwtDecode(token);
+    if (decoded.isAdmin) return <Navigate to="/" replace />;
 
     return <Outlet />;
 }
