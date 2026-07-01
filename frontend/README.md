@@ -1,163 +1,199 @@
-📄 Páginas — Wally Street Frontend
+# 📄 Páginas — Wally Street Frontend
 
-Documentación de las páginas ubicadas en src/pages y de las vistas principales del proyecto.
+Documentación de las páginas ubicadas en `src/pages` y de las vistas principales del proyecto.
 
-📌 Índice
-🔐 Login
-📝 RegistroPage
-✏️ EditarUsuarioPage
-💼 PortfolioPage
-📊 StatPage
-🧩 Rutas que renderizan componentes directamente
-⚠️ Notas
-🔐 Login (index.jsx)
+## 📌 Índice
 
-Formulario de inicio de sesión. Exporta el componente Login.
+- [🔐 Login](#-login-indexjsx)
+- [📝 RegistroPage](#-registropage)
+- [✏️ EditarUsuarioPage](#-editarusuariopage)
+- [💼 PortfolioPage](#-portfoliopage)
+- [📊 StatPage](#-statpage)
+- [🧩 Rutas que renderizan componentes directamente](#-rutas-que-renderizan-componentes-directamente)
+- [⚠️ Notas](#️-notas)
 
-Dependencias
-InputText
-lucide-react → Wallet, Gamepad2
-useAuth
-api
-Estado interno
-Estado	Descripción
-email	Email ingresado por el usuario
-password	Contraseña ingresada
-Flujo
-El usuario completa el formulario con su email y contraseña.
-Al enviar el formulario se ejecuta login(email, password) mediante el hook useAuth.
-Si la autenticación es correcta, se almacena la sesión y el usuario es redirigido a la aplicación.
-El manejo de errores queda delegado al hook de autenticación.
-📝 RegistroPage
+---
+
+## 🔐 Login (`index.jsx`)
+
+Formulario de inicio de sesión. Exporta el componente `Login`.
+
+### Dependencias
+
+- `InputText`
+- `lucide-react` (`Wallet`, `Gamepad2`)
+- `useAuth`
+- `api`
+
+### Estado interno
+
+| Estado | Descripción |
+| ------ | ----------- |
+| `email` | Email ingresado por el usuario |
+| `password` | Contraseña ingresada |
+
+### Flujo
+
+1. El usuario completa el formulario con su email y contraseña.
+2. Al enviar el formulario se ejecuta `login(email, password)` mediante `useAuth`.
+3. Si la autenticación es correcta, el usuario inicia sesión.
+4. El manejo de errores queda delegado al hook de autenticación.
+
+---
+
+## 📝 RegistroPage
 
 Formulario para registrar un nuevo usuario.
 
-Dependencias
-InputText
-lucide-react → Wallet
-validarDatos
-api
-useAuth
-Estado interno
-Estado	Descripción
-email	Email del usuario
-username	Nombre de usuario
-password	Contraseña
-errors	Lista de errores de validación
-successMessage	Mensaje mostrado luego del registro
-Flujo
-Se validan los datos mediante validarDatos.
-Si existen errores, se muestran al usuario.
-Si la validación es correcta, se realiza un POST /users.
-Si el email ya se encuentra registrado, se informa el error correspondiente.
-Si el registro es exitoso:
-se muestra un mensaje de éxito;
-se inicia sesión automáticamente mediante login(email, password);
-se limpian los campos del formulario.
-✏️ EditarUsuarioPage
+### Dependencias
 
-Página que permite modificar los datos del usuario autenticado.
+- `InputText`
+- `lucide-react` (`Wallet`)
+- `validarDatos`
+- `api`
+- `useAuth`
 
-Dependencias
-InputText
-lucide-react → User
-useAuth
-api
-Estado interno
-Estado	Descripción
-nombre	Nuevo nombre del usuario
-password	Nueva contraseña
-repeatPassword	Confirmación de contraseña
-errors	Lista de errores de validación
-successMessage	Mensaje de actualización exitosa
-Flujo
-Obtiene el identificador del usuario a partir del JWT.
-Verifica que exista al menos un dato para modificar.
-Valida que ambas contraseñas coincidan.
-Comprueba que la contraseña cumpla los requisitos mínimos de seguridad.
-Envía un PUT /users/{id} únicamente con los campos modificados.
-Si el backend responde con 401, ejecuta logout().
-💼 PortfolioPage
+### Estado interno
+
+| Estado | Descripción |
+| ------ | ----------- |
+| `email` | Email del usuario |
+| `username` | Nombre de usuario |
+| `password` | Contraseña |
+| `errors` | Lista de errores de validación |
+| `successMessage` | Mensaje de registro exitoso |
+
+### Flujo
+
+1. Valida los datos utilizando `validarDatos`.
+2. Si existen errores, los muestra al usuario.
+3. Si la validación es correcta, realiza `POST /users`.
+4. Si el registro es exitoso:
+   - muestra un mensaje de éxito;
+   - inicia sesión automáticamente;
+   - limpia el formulario.
+
+---
+
+## ✏️ EditarUsuarioPage
+
+Permite modificar los datos del usuario autenticado.
+
+### Dependencias
+
+- `InputText`
+- `lucide-react` (`User`)
+- `useAuth`
+- `api`
+
+### Estado interno
+
+| Estado | Descripción |
+| ------ | ----------- |
+| `nombre` | Nuevo nombre del usuario |
+| `password` | Nueva contraseña |
+| `repeatPassword` | Confirmación de contraseña |
+| `errors` | Lista de errores |
+| `successMessage` | Mensaje de actualización |
+
+### Flujo
+
+1. Obtiene el identificador del usuario desde el JWT.
+2. Verifica que exista al menos un dato para modificar.
+3. Valida las contraseñas.
+4. Envía un `PUT /users/{id}` únicamente con los campos modificados.
+5. Si el token expiró, ejecuta `logout()`.
+
+---
+
+## 💼 PortfolioPage
 
 Página privada donde el usuario administra su cartera de inversiones.
 
-Dependencias
-PortfolioComponent
-Funcionalidad
+### Dependencias
 
-Toda la lógica de esta página se encuentra implementada en PortfolioComponent, el cual permite:
+- `PortfolioComponent`
 
-visualizar todos los activos del portfolio;
-consultar el saldo disponible;
-conocer el precio actual y el precio de compra de cada activo;
-comprar nuevas unidades;
-vender activos;
-eliminar posiciones vacías;
-mostrar errores cuando una operación no puede completarse;
-actualizar automáticamente la información del portfolio luego de cada operación.
+### Funcionalidad
 
-Las operaciones se realizan mediante ventanas modales de confirmación y consumen los servicios del frontend para comunicarse con la API.
+La lógica de esta página se encuentra implementada en `PortfolioComponent`, el cual permite:
 
-📊 StatPage
+- visualizar el portfolio;
+- consultar el saldo disponible;
+- comprar activos;
+- vender activos;
+- eliminar posiciones vacías;
+- consultar el precio actual y el precio de compra;
+- actualizar automáticamente la información luego de cada operación.
+
+---
+
+## 📊 StatPage
 
 Página pública que muestra el mercado de activos.
 
-Dependencias
-PublicAssetsComponent
-Funcionalidad
+### Dependencias
 
-Toda la lógica de esta página está implementada en PublicAssetsComponent, que permite:
+- `PublicAssetsComponent`
 
-obtener el listado de activos desde la API;
-actualizar automáticamente los precios cada tres minutos;
-buscar activos por nombre;
-filtrar por rango de precios;
-ordenar el listado por nombre o precio;
-visualizar la variación porcentual del precio de cada activo;
-navegar entre los resultados mediante paginación.
+### Funcionalidad
 
-Al tratarse de una vista pública, no permite realizar compras, ventas ni consultar el historial de precios.
+Toda la lógica se encuentra implementada en `PublicAssetsComponent`, que permite:
 
-🧩 Rutas que renderizan componentes directamente
+- visualizar los activos disponibles;
+- buscar por nombre;
+- filtrar por rango de precios;
+- ordenar resultados;
+- visualizar la variación porcentual del precio;
+- navegar mediante paginación;
+- actualizar automáticamente los precios cada tres minutos.
 
-Actualmente existen dos rutas que renderizan componentes sin utilizar una página intermedia dentro de src/pages.
+---
 
-🛠️ /panel
+## 🧩 Rutas que renderizan componentes directamente
 
-Renderiza directamente:
+Actualmente existen dos rutas que renderizan componentes sin utilizar una página propia.
 
-AssetsComponent
-Funcionalidad
+### 🛠️ `/panel`
 
-AssetsComponent implementa toda la lógica del panel de administración de activos.
+Renderiza:
 
-Permite:
+- `AssetsComponent`
 
-visualizar todos los assets disponibles;
-buscar activos por nombre;
-filtrar por rango de precios;
-ordenar los resultados;
-comprar activos;
-consultar el historial de precios;
-visualizar la variación porcentual de cada asset;
-actualizar automáticamente los precios del mercado;
-navegar mediante paginación.
-📜 /operaciones
+Este componente permite:
 
-Renderiza directamente:
+- listar assets;
+- buscar y filtrar;
+- ordenar resultados;
+- comprar activos;
+- consultar historial;
+- actualizar automáticamente los precios;
+- navegar mediante paginación.
 
-TransactionsComponent
-Funcionalidad
+---
 
-TransactionsComponent implementa toda la lógica del historial de operaciones del usuario.
+### 📜 `/operaciones`
 
-Permite:
+Renderiza:
 
-visualizar todas las transacciones realizadas;
-filtrar las operaciones por activo;
-filtrar por tipo de transacción (compra o venta);
-combinar ambos filtros;
-navegar entre las páginas del historial;
-consultar la fecha, el precio, la cantidad y el tipo de cada operación.
+- `TransactionsComponent`
 
-Si el backend responde con un error 401, el componente ejecuta logout() para finalizar la sesión del usuario.
+Este componente permite:
+
+- consultar el historial de operaciones;
+- filtrar por activo;
+- filtrar por tipo de operación;
+- combinar filtros;
+- navegar mediante paginación;
+- visualizar fecha, cantidad, precio y tipo de cada transacción.
+
+Si el backend responde con `401`, ejecuta `logout()`.
+
+---
+
+## ⚠️ Notas
+
+- Actualmente `/panel` y `/operaciones` renderizan directamente `AssetsComponent` y `TransactionsComponent`.
+- Se recomienda crear `PanelPage.jsx` y `OperationsPage.jsx` para mantener una estructura consistente dentro de `src/pages`.
+- La autenticación se centraliza mediante `useAuth`.
+- La mayor parte de la lógica del proyecto se encuentra encapsulada en los componentes de `src/components`.
