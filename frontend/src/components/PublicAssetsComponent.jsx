@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAssets, UpdateAssets } from "../services/assetsService";
 import AssetFilters from "./AssetFilters";
 import AssetPagination from "./AssetPagination";
+import { REFRESH_TIME } from "../constants/config";
 
 export default function PublicAssetsComponent() {
   const [assets, setAssets] = useState([]);
@@ -13,7 +14,6 @@ export default function PublicAssetsComponent() {
   const [estadoAsset, setEstadoAsset] = useState({});
   const [notFound, setNotFound] = useState(false);
   const [listo, setListo] = useState(false);
-  const REFRESH_TIME = 3 * 60 * 1000;
 
   const cargarAssets = async () => {
     setNotFound(false);
