@@ -1,0 +1,1 @@
+export const REFRESH_TIME = 1 * 60 * 1000; // para cambiar el tiempo de refresco en minutos actualizar el primer termino despues del igual
