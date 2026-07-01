@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getAssets, UpdateAssets } from "../services/assetsService";
+import { getAssets, UpdateAssets, getHistory } from "../services/assetsService";
 import { BuyAsset } from "../services/TradeServicie";
 import AssetFilters from "./AssetFilters";
 import AssetPagination from "./AssetPagination";
-import { getHistory } from "../services/assetsService";
 import AssetHistoryCard from "./AssetHistoryCard";
+import { REFRESH_TIME } from "../constants/config";
+import useAuth from "../hooks/useAuth";
 
 export const AssetsComponent = () => {
   const [assets, setAssets] = useState([]);
@@ -20,8 +21,17 @@ export const AssetsComponent = () => {
   const [historial, setHistorial] = useState([]);
   const [nombreHistorial, setNombreHistorial] = useState("");
   const [mostrarHistorial, setMostrarHistorial] = useState(false);
-  const max=5;
-  const REFRESH_TIME = 3 * 60 * 1000;
+  const max = 5;
+  const { logout } = useAuth();
+
+  const tokenVencido = (err) => {
+    if (err.response?.status === 401) {
+      logout();
+      return true;
+    }
+    return false;
+  };
+
   const cargarAssets = async () => {
     setNotFound(false);
     try {
@@ -35,6 +45,7 @@ export const AssetsComponent = () => {
       if (error.response?.status === 404) {
         setNotFound(true);
       } else {
+        if (tokenVencido(error)) return;
         console.error(error);
         alert(error.message);
       }
@@ -52,11 +63,14 @@ export const AssetsComponent = () => {
       try {
         await UpdateAssets();
       } catch (error) {
-       if (error.response?.status === 403) {
-         console.log("Acceso denegado");
-       } else if(error.response?.status === 404){
-         console.error("No existe el asset");
-        }else{ console.log(error);}
+        if (error.response?.status === 403) {
+          console.log("Acceso denegado");
+        } else if (error.response?.status === 404) {
+          console.error("No existe el asset");
+        } else {
+          if (tokenVencido(error)) return;
+          console.log(error);
+        }
       }
 
       try {
@@ -88,24 +102,26 @@ export const AssetsComponent = () => {
     return () => clearInterval(interval);
   }, [listo]);
 
- // AssetsComponent.jsx
-const verHistorial = async (id, nombre) => {
-  try {
-    const data = await getHistory(id, max);
+  const verHistorial = async (id, nombre) => {
+    try {
+      const data = await getHistory(id, max);
 
-    setHistorial(data);
-    setNombreHistorial(nombre);
-    setMostrarHistorial(true);
-  } catch (error) {
-    console.error(error);
-    if (error.response?.status === 400) {
-    console.log("el asset actual no tiene cambios");
-    setHistorial([]);
-    setNombreHistorial(nombre);
-    setMostrarHistorial(true);    
+      setHistorial(data);
+      setNombreHistorial(nombre);
+      setMostrarHistorial(true);
+    } catch (error) {
+      if (tokenVencido(error)) return;
+      if (error.response?.status === 400) {
+        console.log("el asset actual no tiene cambios");
+        setHistorial([]);
+        setNombreHistorial(nombre);
+        setMostrarHistorial(true);
+      } else {
+        console.error(error);
+      }
     }
-  }
-};
+  };
+
   const cambiarCantidad = (id, valor) => {
     if (valor === "") {
       setCantidades((prev) => ({ ...prev, [id]: "" }));
@@ -125,23 +141,26 @@ const verHistorial = async (id, nombre) => {
       await BuyAsset(id, cantidad);
       alert("Compra realizada correctamente");
     } catch (error) {
-      if(error.response?.status===409){
-         alert("Dinero insuficiente");
-      }else{
-      console.error(error);
-      alert("Error al comprar el asset");}
+      if (error.response?.status === 409) {
+        alert("Dinero insuficiente");
+      } else {
+        if (tokenVencido(error)) return;
+        console.error(error);
+        alert("Error al comprar el asset");
+      }
     }
   };
 
-const assetsFiltrados = [...assets].sort((a, b) => {
-  switch (order) {
-    case "asc":  return Number(a.Precio) - Number(b.Precio);
-    case "desc": return Number(b.Precio) - Number(a.Precio);
-    case "a-z":  return a.Nombre.localeCompare(b.Nombre, undefined, { sensitivity: "base" });
-    case "z-a":  return b.Nombre.localeCompare(a.Nombre, undefined, { sensitivity: "base" });
-    default:     return 0;
-  }
-});
+  const assetsFiltrados = [...assets].sort((a, b) => {
+    switch (order) {
+      case "asc": return Number(a.Precio) - Number(b.Precio);
+      case "desc": return Number(b.Precio) - Number(a.Precio);
+      case "a-z": return a.Nombre.localeCompare(b.Nombre, undefined, { sensitivity: "base" });
+      case "z-a": return b.Nombre.localeCompare(a.Nombre, undefined, { sensitivity: "base" });
+      default: return 0;
+    }
+  });
+
   const visibles = assetsFiltrados.slice(current, current + 3);
 
   return (
@@ -220,7 +239,7 @@ const assetsFiltrados = [...assets].sort((a, b) => {
                     Comprar
                   </button>
                   <button
-                    onClick={() => verHistorial(asset.id,asset.Nombre)}
+                    onClick={() => verHistorial(asset.id, asset.Nombre)}
                     className="w-full mt-2 bg-blue-600 hover:bg-blue-700 py-2 rounded text-white"
                   >
                     Ver historial
