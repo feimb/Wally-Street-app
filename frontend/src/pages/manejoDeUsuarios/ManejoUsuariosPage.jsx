@@ -1,8 +1,9 @@
 // src/pages/admin/ManejoUsuariosPage.jsx
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "../../services/api";
-import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import FilaUsuario from "./components/FilaUsuarios";
+import { validarDatos } from "../../utils/validarDatos";
 
 const PAGE_SIZE = 5;
 
@@ -13,8 +14,17 @@ export default function ManejoUsuariosPage() {
     const [pagina, setPagina] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const { token, user } = useAuth();
+
+    const [editingUserId, setEditingUserId] = useState(null);
+    const [nombreEditado, setNombreEditado] = useState("");
+    const [passwordEditado, setPasswordEditado] = useState("");
+    const [repeatPasswordEditado, setRepeatPasswordEditado] = useState("");
+    const [editErrors, setEditErrors] = useState([]);
+    const [editSuccess, setEditSuccess] = useState("");
+    const [saving, setSaving] = useState(false);
+
+    const { token, logout } = useAuth();
+
     useEffect(() => {
         const fetchUsuarios = async () => {
             try {
@@ -24,43 +34,145 @@ export default function ManejoUsuariosPage() {
                     },
                 });
                 setUsuarios(response.data);
-                console.log(response.data);
-
-            } catch (err) {
+            } catch {
                 setError("Error al cargar los usuarios");
             } finally {
                 setLoading(false);
             }
         };
-        fetchUsuarios();
-    }, []);
 
-    // filtrar por nombre
+        if (token) {
+            fetchUsuarios();
+        } else {
+            setLoading(false);
+            setError("No hay sesión activa");
+        }
+    }, [token]);
+
     const filtrados = usuarios.filter((u) =>
-        u.Nombre.toLowerCase().includes(filtro.toLowerCase()),
+        String(u.Nombre ?? "").toLowerCase().includes(filtro.toLowerCase()),
     );
 
-    // ordenar por Total
     const ordenados = [...filtrados].sort((a, b) =>
-        orden === "desc" ? b.Total - a.Total : a.Total - b.Total,
+        orden === "desc"
+            ? Number(b.Total) - Number(a.Total)
+            : Number(a.Total) - Number(b.Total),
     );
 
-    // paginar
     const totalPaginas = Math.ceil(ordenados.length / PAGE_SIZE);
     const paginados = ordenados.slice(
         (pagina - 1) * PAGE_SIZE,
         pagina * PAGE_SIZE,
     );
 
-    // resetear página al filtrar
     const handleFiltro = (e) => {
         setFiltro(e.target.value);
         setPagina(1);
     };
 
-    if (loading)
+    const resetEditState = () => {
+        setNombreEditado("");
+        setPasswordEditado("");
+        setRepeatPasswordEditado("");
+        setEditErrors([]);
+        setEditSuccess("");
+    };
+
+    function cancelarEdicion() {
+        setEditingUserId(null);
+        resetEditState();
+    }
+
+    function handleEditarClick(usuario) {
+        if (editingUserId === usuario.id) {
+            cancelarEdicion();
+            return;
+        }
+
+        setEditingUserId(usuario.id);
+        resetEditState();
+    }
+
+    async function handleGuardarUsuario(usuarioId) {
+        const errors = validarDatos({
+            username: nombreEditado,
+            password: passwordEditado,
+            repeatPassword: repeatPasswordEditado,
+            requireEmail: false,
+            requireUsername: false,
+            requirePassword: false,
+            requireAtLeastOneField: true,
+        });
+
+        if (errors.length > 0) {
+            setEditErrors(errors);
+            setEditSuccess("");
+            return;
+        }
+
+        const nombreLimpio = nombreEditado.trim();
+        const data = {};
+
+        if (nombreLimpio) {
+            data.name = nombreLimpio;
+        }
+
+        if (passwordEditado) {
+            data.password = passwordEditado;
+        }
+
+        try {
+            setSaving(true);
+            setEditErrors([]);
+            setEditSuccess("");
+
+            await api.put(`/users/${usuarioId}`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setUsuarios((prev) =>
+                prev.map((u) =>
+                    u.id === usuarioId
+                        ? {
+                              ...u,
+                              Nombre: nombreLimpio || u.Nombre,
+                          }
+                        : u,
+                ),
+            );
+
+            setEditSuccess("Cambio realizado correctamente");
+            setEditingUserId(null);
+            setNombreEditado("");
+            setPasswordEditado("");
+            setRepeatPasswordEditado("");
+            setEditErrors([]);
+        } catch (err) {
+            const apiMessage =
+                err?.response?.data?.message ||
+                err?.response?.data?.error ||
+                "No se pudo actualizar el usuario";
+
+            if (err?.response?.status === 401) {
+                logout();
+            }
+
+            setEditErrors([apiMessage]);
+            setEditSuccess("");
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    if (loading) {
         return <p className="text-neutral-400">Cargando usuarios...</p>;
-    if (error) return <p className="text-tertiary">{error}</p>;
+    }
+
+    if (error) {
+        return <p className="text-tertiary">{error}</p>;
+    }
 
     return (
         <div className="flex flex-col gap-6">
@@ -68,7 +180,6 @@ export default function ManejoUsuariosPage() {
                 Manejo de usuarios
             </h2>
 
-            {/* Controles */}
             <div className="flex items-center gap-4 flex-wrap">
                 <input
                     type="text"
@@ -86,7 +197,6 @@ export default function ManejoUsuariosPage() {
                 </button>
             </div>
 
-            {/* Tabla */}
             <div className="rounded-lg border border-neutral-800 overflow-hidden">
                 <table className="w-full text-sm">
                     <thead className="bg-neutral-800 text-neutral-400 uppercase text-xs">
@@ -109,45 +219,25 @@ export default function ManejoUsuariosPage() {
                                 !filtro;
 
                             return (
-                                <tr
+                                <FilaUsuario
                                     key={usuario.id}
-                                    className={`transition-colors ${
-                                        esPrimero
-                                            ? "bg-primary-950 border-l-2 border-l-primary"
-                                            : "bg-neutral-900 hover:bg-neutral-800"
-                                    }`}
-                                >
-                                    <td className="px-6 py-4 text-neutral-400">
-                                        {esPrimero ? "🏆" : posicionGlobal + 1}
-                                    </td>
-                                    <td className="px-6 py-4 font-medium text-white">
-                                        {usuario.Nombre}
-                                        {esPrimero && (
-                                            <span className="ml-2 text-xs text-primary font-semibold">
-                                                Mejor portfolio
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 text-right font-mono text-primary">
-                                        $
-                                        {Number(usuario.Total).toLocaleString(
-                                            "es-AR",
-                                            { minimumFractionDigits: 2 },
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        <button
-                                            onClick={() =>
-                                                navigate(
-                                                    `/usuarios/${usuario.id}/editar`,
-                                                )
-                                            }
-                                            className="text-xs px-3 py-1.5 rounded bg-secondary hover:bg-secondary-600 text-white transition-colors"
-                                        >
-                                            Editar
-                                        </button>
-                                    </td>
-                                </tr>
+                                    usuario={usuario}
+                                    posicionGlobal={posicionGlobal}
+                                    esPrimero={esPrimero}
+                                    isEditing={editingUserId === usuario.id}
+                                    onEditClick={() => handleEditarClick(usuario)}
+                                    onCancel={cancelarEdicion}
+                                    onSave={() => handleGuardarUsuario(usuario.id)}
+                                    nombreEditado={nombreEditado}
+                                    setNombreEditado={setNombreEditado}
+                                    passwordEditado={passwordEditado}
+                                    setPasswordEditado={setPasswordEditado}
+                                    repeatPasswordEditado={repeatPasswordEditado}
+                                    setRepeatPasswordEditado={setRepeatPasswordEditado}
+                                    validationErrors={editErrors}
+                                    successMessage={editSuccess}
+                                    isSaving={saving}
+                                />
                             );
                         })}
 
@@ -165,7 +255,6 @@ export default function ManejoUsuariosPage() {
                 </table>
             </div>
 
-            {/* Paginado */}
             {totalPaginas > 1 && (
                 <div className="flex items-center justify-center gap-2">
                     <button
