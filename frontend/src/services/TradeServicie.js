@@ -1,11 +1,11 @@
-import axios from "axios";
+import api from "./api";
 
-const API_URL = "http://localhost/trade";
+const API_URL = "/trade";
 
 export const BuyAsset = async (asset_id, quantity) => {
   const token = localStorage.getItem("token");
 
-  const response = await axios.post(
+  const response = await api.post(
     `${API_URL}/buy`,
     { asset_id, quantity },
     {
@@ -18,11 +18,10 @@ export const BuyAsset = async (asset_id, quantity) => {
   return response.data;
 };
 
-
 export const SellAsset = async (asset_id, quantity) => {
   const token = localStorage.getItem("token");
 
-  const response = await axios.post(
+  const response = await api.post(
     `${API_URL}/sell`,
     { asset_id, quantity },
     {

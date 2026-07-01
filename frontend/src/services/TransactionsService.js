@@ -1,11 +1,11 @@
-import axios from "axios";
+import api from "./api";
 
-const API_URL = "http://localhost";
+const API_URL = "/transactions";
 
 export const getTransactions = async (asset_id, type) => {
   const token = localStorage.getItem("token");
 
-  const response = await axios.get(`${API_URL}/transactions`, {
+  const response = await api.get(API_URL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
