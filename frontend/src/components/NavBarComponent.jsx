@@ -35,7 +35,7 @@ export const NavBarComponent = () => {
           <NavLink to="/editar"      className={linkClass}>Editar usuario</NavLink>
 
           {user?.is_admin && (
-            <NavLink to="/users" className={linkClass}>
+            <NavLink to="/manejoUsuarios" className={linkClass}>
               <span className="text-yellow-400 font-semibold">Manejo usuarios</span>
             </NavLink>
           )}
