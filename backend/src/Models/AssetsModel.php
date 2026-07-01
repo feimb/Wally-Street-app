@@ -10,22 +10,22 @@ class AssetsModel {
 public static function obtenerAssets($min, $max, $nom) {
     $pdo = DB::conexion();
 
-    $sql = "SELECT name as Nombre, current_price as Precio FROM assets WHERE 1";
+    $sql = "SELECT id,name as Nombre, current_price as Precio FROM assets WHERE 1";
     $params = [];
 
-    if ($min !== null) {
+    if ($min != null) {
         $sql .= " AND current_price >= :min";
         $params["min"] = $min;
     }
 
-    if ($max !== null) {
+    if ($max != null) {
         $sql .= " AND current_price <= :max";
         $params["max"] = $max;
     }
 
-    if ($nom !== null) {
-        $sql .= " AND name = :nom"; 
-        $params["nom"] = $nom;
+    if ($nom !== "") {
+         $sql .= " AND name LIKE :nom";
+         $params["nom"] = "%".$nom."%";
     }
 
     $stmt = $pdo->prepare($sql);

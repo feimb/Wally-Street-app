@@ -13,6 +13,7 @@ class PortfolioModel
 
         $sql = "
             SELECT 
+                assets.id,
                 assets.name AS asset,
                 portfolio.quantity,
                 assets.current_price,

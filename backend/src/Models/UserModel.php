@@ -12,9 +12,17 @@ class UserModel
     { // obtiene los usuarios solo admin
         $pdo = DB::conexion();
 
-        $sql = "SELECT  users.name AS Nombre, COALESCE(SUM(porta.quantity * assets.current_price), 0) AS Total FROM users LEFT JOIN portfolio porta ON users.id = porta.user_id LEFT JOIN assets ON porta.asset_id = assets.id GROUP BY users.name;
-;
-";
+    
+    $sql = "SELECT
+            users.id AS id,
+            users.name AS Nombre,
+            COALESCE(SUM(porta.quantity * assets.current_price), 0) AS Total
+        FROM users
+        LEFT JOIN portfolio porta ON users.id = porta.user_id
+        LEFT JOIN assets ON porta.asset_id = assets.id
+        WHERE users.is_admin = 0
+        GROUP BY users.id, users.name;
+    ";
         $stmt = $pdo->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -191,12 +199,13 @@ class UserModel
         $sql = "SELECT 
         users.name AS Nombre,
         users.balance AS Saldo,
+        users.is_admin AS is_admin,
         COALESCE(SUM(porta.quantity * assets.current_price), 0) AS Total
         FROM users
         LEFT JOIN portfolio porta ON users.id = porta.user_id
         LEFT JOIN assets ON porta.asset_id = assets.id
         WHERE users.id = :id
-        GROUP BY users.id, users.name, users.balance";
+        GROUP BY users.id, users.name, users.balance, users.is_admin";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);

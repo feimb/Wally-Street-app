@@ -18,4 +18,3 @@ class DB
     }
 
 }
-echo $_ENV['DB_NAME'];

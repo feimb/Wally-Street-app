@@ -14,17 +14,15 @@ class OperationsController {
     public function buy(Request $request, Response $response): Response {// compra de un asset
         $data = $request->getParsedBody();
         $user_id = $request->getAttribute('usuario');
-        $asset_id = $data['asset_id'] ?? null;
-        $quantity = $data['cantidad'] ?? null;
+        $asset_id = $data['asset_id'] ?? "";
+        $quantity = $data['quantity'] ?? "";
 
-        if ($asset_id === null) {
+        if (trim($asset_id) ==="") {
             return $this->respuesta($response, "error falta asset_id", 400);
         }
-        if ($quantity === null) {
-            return $this->respuesta($response, "error falta cantidad", 400);
-        }
+ 
         if ($quantity < 1) {
-            return $this->respuesta($response, "error la cantidad minima es de 1", 400);
+            return $this->respuesta($response, "error la cantidad minima es  1", 400);
         }
 
         $existe = AssetsModel::ObtenerPrecioAsset($asset_id);//
@@ -37,16 +35,18 @@ class OperationsController {
         $saldo = $dato['balance'];
 
         if ($saldo < ($precioAsset * $quantity)) {
-            return $this->respuesta($response, "error saldo insuficiente", 400);
+            return $this->respuesta($response, "error saldo insuficiente", 409);
         }
         $dato2=PortfolioModel::ObtenerquantityAsset($user_id,$asset_id);
         if($dato2==false){
-          PortfolioModel::Registrar($user_id,$asset_id,$quantity);
-        }
-        $saldo = $saldo - ($precioAsset * $quantity);
+          PortfolioModel::Registrar($user_id,$asset_id,$quantity);// si no existe lo creo
+        }else{
         $quantity_total=$dato2['quantity']+$quantity;
         PortfolioModel::Actualizar($user_id,$asset_id,($quantity_total)); // si ya existe en el portfolio lo actualizo
          
+        }
+        $saldo = $saldo - ($precioAsset * $quantity);
+
         TransactionModels::Registrar($user_id, $asset_id, "buy", $quantity, $precioAsset, ($precioAsset * $quantity)); // se registra la compra 
        UserModel::ActualizarSaldo($user_id, $saldo);
 
@@ -61,7 +61,7 @@ class OperationsController {
         $data = $request->getParsedBody();
         $user_id = $request->getAttribute('usuario');
         $asset_id = $data['asset_id'] ?? null;
-        $quantity = $data['cantidad'] ?? null;
+        $quantity = $data['quantity'] ?? null;
       
         if ($asset_id === null) {
             return $this->respuesta($response, "error falta asset_id", 400);

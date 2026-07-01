@@ -137,12 +137,29 @@ class UserController
 
         $name = $data["name"] ?? null;
         $password = $data["password"] ?? null;
+
+        if (!$name && !$password) {
+            return $this->errorCode($response, "Nada para actualizar", 400);
+        }
+
         if ($name !== null) {
-            if (strlen($name) < 3) {
+            if (strlen(trim($name)) < 3) {
                 return $this->errorCode($response, "nombre muy corto", 400);
+            }
+            if (!preg_match('/^[a-zA-Z ]+$/', $name)) {
+                return $this->errorCode($response, "el nombre solo puede contener letras", 400);
             }
         }
         if ($password !== null) {
+            if (
+                !preg_match('/[a-z]/', $password) ||
+                !preg_match('/[A-Z]/', $password) ||
+                !preg_match('/[0-9]/', $password) ||
+                !preg_match('/[^a-zA-Z0-9]/', $password)
+            ) {
+                return $this->errorCode($response, "La password no esta bien hecha", 400);
+            }
+
             if (strlen($password) < 8) {
                 return $this->errorCode($response, "password muy corto", 400);
             }
@@ -156,10 +173,6 @@ class UserController
 
         if ($userIdParam != $userIdToken && !$isAdmin) {
             return $this->errorCode($response, "No autorizado", 403);
-        }
-
-        if (!$name && !$password) {
-            return $this->errorCode($response, "Nada para actualizar", 400);
         }
 
         if ($password) {

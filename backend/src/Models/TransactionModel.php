@@ -13,6 +13,7 @@ class TransactionModel
 
         $sql = "
             SELECT 
+                assets.id as assed_id,
                 transactions.id,
                 assets.name AS asset,
                 transactions.transaction_type,

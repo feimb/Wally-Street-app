@@ -15,8 +15,8 @@ public function index(Request $request, Response $response): Response // mostrar
 
     $min = $query['min'] ?? null;
     $max = $query['max'] ?? null;
-    $nom = $query['nombre'] ?? null;
-    
+    $nom = $query['name'] ?? "";
+
     $data = AssetsModel::obtenerAssets($min, $max, $nom);
 
     if (empty($data)) {

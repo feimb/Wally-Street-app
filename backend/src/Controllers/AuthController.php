@@ -40,7 +40,7 @@ class AuthController
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(401);
+                ->withStatus(400);
         }
 
         $expire = (new \DateTime("now"))
