@@ -191,3 +191,9 @@ Si el backend responde con `401`, ejecuta `logout()`.
 
 ---
 
+## ⚠️ Notas
+
+- Actualmente `/panel` y `/operaciones` renderizan directamente `AssetsComponent` y `TransactionsComponent`.
+- Se recomienda crear `PanelPage.jsx` y `OperationsPage.jsx` para mantener una estructura consistente dentro de `src/pages`.
+- La autenticación se centraliza mediante `useAuth`.
+- La mayor parte de la lógica del proyecto se encuentra encapsulada en los componentes de `src/components`.
