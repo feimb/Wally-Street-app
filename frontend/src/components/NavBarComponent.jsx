@@ -33,12 +33,12 @@ export const NavBarComponent = () => {
           <NavLink to="/operaciones" className={linkClass}>Mis operaciones</NavLink>
           <NavLink to="/panel"       className={linkClass}>Ver panel</NavLink>
           <NavLink to="/editar"      className={linkClass}>Editar usuario</NavLink>
-
-          {user?.is_admin && (
+          
+          {user?.is_admin === 1 ? (
             <NavLink to="/manejoUsuarios" className={linkClass}>
               <span className="text-yellow-400 font-semibold">Manejo usuarios</span>
             </NavLink>
-          )}
+          ): ("") }
 
           <button
             onClick={handleLogout}
