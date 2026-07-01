@@ -35,8 +35,9 @@ return function (App $app) {
     // Activos
     $app->get('/assets', [AssetsController::class, 'index']);
 
-    $app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive']);
 
+    $app->get('/assets/{asset_id}/history/{quantity}', [AssetsController::class, 'retreive'])
+        ->add(new IsLoggedMiddleware($app->getResponseFactory()));
 
     $app->put('/assets', [AssetsController::class, 'actualizarAssets'])
         ->add(new IsLoggedMiddleware($app->getResponseFactory()));
